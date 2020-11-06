@@ -16,7 +16,7 @@
 
 {% macro sqlite__truncate_relation(relation) -%}
     {% call statement('truncate_relation') -%}
-        truncate table {{ relation.schema }}.{{ relation.identifier }}
+        delete from {{ relation.schema }}.{{ relation.identifier }}
     {%- endcall %}
 {% endmacro %}
 
