@@ -13,7 +13,7 @@ setup(
     long_description=description,
     author='Jeff Chiu',
     author_email='jeff@codefork.com',
-    url='',
+    url='https://github.com/codeforkjeff/dbt-sqlite',
     packages=find_packages(),
     package_data={
         'dbt': [
