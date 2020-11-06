@@ -3,6 +3,10 @@
 
 A SQLite adapter plugin for dbt (data build tool)
 
+This is an 'experimental' plugin. Features are missing, need to be
+implemented, or broken. Use at your own risk and please report
+bugs!
+
 ## How to Use This
 
 Install this package.
@@ -28,9 +32,6 @@ dbt_sqlite:
 Set `profile: 'dbt_sqlite'` in your project's `dbt_project.yml` file.
 
 ## Notes
-
-This is extremely 'alpha' quality software. Much is untested and things
-are likely broken. Use at your own risk. Please report bugs!
 
 - There is no 'database' portion of relation names in SQLite so it gets
 stripped from the output of `ref()` and from SQL everywhere. It still
