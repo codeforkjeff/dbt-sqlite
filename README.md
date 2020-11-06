@@ -4,8 +4,7 @@
 A SQLite adapter plugin for dbt (data build tool)
 
 This is an 'experimental' plugin. Features are missing, need to be
-implemented, or broken. Use at your own risk and please report
-bugs!
+implemented, or broken. Use at your own risk. Issues and PRs welcome!
 
 ## How to Use This
 
