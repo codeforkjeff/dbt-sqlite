@@ -43,10 +43,10 @@ assigns 'main' to the database file you initially connect to.
 to create paths for database files on the fly for the new schema that are
 created. This impacts several features:
 
-  ** [Custom schemas](https://docs.getdbt.com/docs/building-a-dbt-project/building-models/using-custom-schemas/) - 
+  - [Custom schemas](https://docs.getdbt.com/docs/building-a-dbt-project/building-models/using-custom-schemas/) - 
 dbt creates new "sub project" schemas for custom schemas, so this won't work.
 
-  ** ephemeral materializations needs to create schemas, so this won't work.
+  - ephemeral materializations needs to create schemas, so this won't work.
 
 - SQLite does not allow views in one schema (i.e. database file) to reference
 objects in another schema. You'll get this error from SQLite: "view [someview]
