@@ -3,39 +3,6 @@
 
 A SQLite adapter plugin for dbt (data build tool)
 
-## Notes
-
-This is extremely 'alpha' quality software. Much is untested and things
-are likely broken. Use at your own risk. Please report bugs!
-
-- The 'database' value in configuration is irrelevant to SQLite and gets
-stripped from the output of `ref()` and from SQL everywhere, and/or it
-is always set to the value of 'database' in your target configuration.
-
-- Schema are implemented as attached database files. SQLite automatically
-assigns 'main' to the database file you initially connect to.
-
-- Creating schemas is (not yet?) supported. There would need to be a way
-to create paths for database files on the fly for the new schema that are
-created. This impacts several features:
-
-** [Custom schemas](https://docs.getdbt.com/docs/building-a-dbt-project/building-models/using-custom-schemas/) - 
-dbt creates new "sub project" schemas for custom schemas, so this won't work.
-
-** ephemeral materializations needs to create schemas, so this won't work.
-
-- SQLite does not allow views in one schema (i.e. database file) to reference
-objects in another schema. You'll get this error from SQLite: "view [someview]
-cannot reference objects in database [somedatabase]". You must set
-`materialized='table'` in models that reference other schemas.
-
-- Some code is implemented as overrides in the `SQLiteAdapter` class rather
-than tweaking the Jinja macros in `adapters.sql`, either because it was too
-complicated or I couldn't figure out how to do it that way.
-
-- This has been developed on Ubuntu 20.04, Python 3.8.5 (with sqlite 3.31.1),
-dbt 0.18.1. It's largely untested elsewhere.
-
 ## How to Use This
 
 Install this package.
@@ -60,10 +27,46 @@ dbt_sqlite:
 
 Set `profile: 'dbt_sqlite'` in your project's `dbt_project.yml` file.
 
-## Known Issues / TODOs
+## Notes
+
+This is extremely 'alpha' quality software. Much is untested and things
+are likely broken. Use at your own risk. Please report bugs!
+
+- There is no 'database' portion of relation names in SQLite so it gets
+stripped from the output of `ref()` and from SQL everywhere. It still
+needs to be set in the configuration and is used by dbt internally.
+
+- Schema are implemented as attached database files. SQLite automatically
+assigns 'main' to the database file you initially connect to.
+
+- Creating schemas is (not yet?) supported. There would need to be a way
+to create paths for database files on the fly for the new schema that are
+created. This impacts several features:
+
+  ** [Custom schemas](https://docs.getdbt.com/docs/building-a-dbt-project/building-models/using-custom-schemas/) - 
+dbt creates new "sub project" schemas for custom schemas, so this won't work.
+
+  ** ephemeral materializations needs to create schemas, so this won't work.
+
+- SQLite does not allow views in one schema (i.e. database file) to reference
+objects in another schema. You'll get this error from SQLite: "view [someview]
+cannot reference objects in database [somedatabase]". You must set
+`materialized='table'` in models that reference other schemas.
+
+- Columns with numeric data in seed files won't load correctly unless you
+explicitly specify 'int' datatype in the seeds configuration. You'll get an error
+like "Error binding parameter N - probably unsupported type." (This doesn't
+happen with postgres.)
+
+- This has been developed on Ubuntu 20.04, Python 3.8.5 (with sqlite 3.31.1),
+dbt 0.18.1. It's largely untested elsewhere.
+
+## Development Notes / TODOs
 
 Need to implement:
 - get_columns_in_relation
+- Is it possible to override BaseRelation.render() in leave off the database
+part of the fully qualified relation name?
 
 ## Credits
 
