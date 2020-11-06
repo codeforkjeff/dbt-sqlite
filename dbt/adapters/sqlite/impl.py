@@ -1,4 +1,5 @@
 
+import re
 from typing import List, Set
 
 import agate
@@ -17,6 +18,34 @@ class SQLiteAdapter(SQLAdapter):
         return 'date()'
 
 
+    def drop_relation(self, relation):
+        """
+        Implement DROP ... CASCADE behavior for sqlite
+        """
+        sql = f"drop { relation.type } if exists { relation.schema }.{ relation.identifier }"
+        self.connections.execute(sql)
+
+        views_sql = f"SELECT name, sql FROM {relation.schema}.sqlite_master WHERE type = 'view'"
+
+        results = self.connections.execute(views_sql, fetch=True)
+
+        for row in results[1]:
+            view = row[0]
+            definition = row[1]
+
+            # TODO: this is just proof of concept for now; consider using sqlparse
+            # or some other more accurate way to determine dependencies
+
+            # strip sql comments 
+            definition_cleaned = re.sub(r"--.*", "", definition, re.MULTILINE)
+
+            if relation.identifier in definition_cleaned:
+                print (f"CASCADE: dropping view {view}")
+                self.connections.execute(f"drop view { relation.schema }.{ view }")
+
+        print("finished drop_relation")
+
+
     def get_live_relation_type(self, relation):
         """
         returns the type of relation (table, view) from the live database
@@ -32,11 +61,17 @@ class SQLiteAdapter(SQLAdapter):
         because renaming views is complicated
         """
 
+        print(f"Renaming {from_relation} to {to_relation}")
+
         # can't use from_relation.type b/c that reflects the project files, not actual state of db.
         # I'm not sure why this is needed, since other postgres and others odn't seem to have
         # this issue. this may be a patch for something else that's not working quite right
         # in this adapter.
         existing_relation_type = self.get_live_relation_type(from_relation)
+
+        # not sure the call to get_live_relation_type() is needed; if you replace above line 
+        # with this one, however, it doesn't seem to change anything 
+        # existing_relation_type = from_relation.type
 
         if existing_relation_type == 'table':
 
@@ -55,7 +90,7 @@ class SQLiteAdapter(SQLAdapter):
             #
             # I think the real fix is to implement DROP CASCADE behavior in drop_relation
 
-            self.connections.execute(f"PRAGMA legacy_alter_table=ON")
+            #self.connections.execute(f"PRAGMA legacy_alter_table=ON")
 
             self.connections.execute(f"ALTER TABLE {from_relation.schema}.{from_relation.identifier} RENAME TO {to_relation.identifier}")
         elif existing_relation_type == 'view':
