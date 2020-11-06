@@ -32,7 +32,10 @@ class SQLiteAdapter(SQLAdapter):
         because renaming views is complicated
         """
 
-        # can't use from_relation.type b/c that reflects the project files, not actual state of db
+        # can't use from_relation.type b/c that reflects the project files, not actual state of db.
+        # I'm not sure why this is needed, since other postgres and others odn't seem to have
+        # this issue. this may be a patch for something else that's not working quite right
+        # in this adapter.
         existing_relation_type = self.get_live_relation_type(from_relation)
 
         if existing_relation_type == 'table':
