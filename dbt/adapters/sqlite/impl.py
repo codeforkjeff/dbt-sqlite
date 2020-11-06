@@ -37,8 +37,21 @@ class SQLiteAdapter(SQLAdapter):
 
         if existing_relation_type == 'table':
 
-            # legacy_alter_table is needed to avoid sqlite3 auto-updating references in downstream models,
-            # which causes all kinds of problems and confusion
+            # this is complicated:
+            #
+            # sqlite doesn't support DROP CASCADE. this means after it renames a table to a 'backup',
+            # (which updates references in views, like postgres does), dropping the backup won't drop
+            # the dependent views. the views remain, with "bad" references, and sqlite doesn't throw an
+            # error. when dbt tries to "rename" a view by dropping/re-creating its definition containing
+            # a bad reference, sqlite throws an error about the backup table not existing.
+            #
+            # workaround: use the legacy_alter_table pragma, so that when a table is renamed, views don't
+            # get their references auto-updated. this is gross non-standard behavior but it preserves the
+            # integrity of the downstream view, so it can be backed up. there may still be other problems
+            # (e.g. if you delete a table entirely from the project.)
+            #
+            # I think the real fix is to implement DROP CASCADE behavior in drop_relation
+
             self.connections.execute(f"PRAGMA legacy_alter_table=ON")
 
             self.connections.execute(f"ALTER TABLE {from_relation.schema}.{from_relation.identifier} RENAME TO {to_relation.identifier}")
