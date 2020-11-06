@@ -16,15 +16,33 @@ class SQLiteAdapter(SQLAdapter):
     def date_function(cls):
         return 'date()'
 
+
+    def get_live_relation_type(self, relation):
+        """
+        returns the type of relation (table, view) from the live database
+        """
+        sql = f"SELECT type as data_type FROM { relation.schema }.sqlite_master WHERE name = '{relation.identifier}'"
+        result = self.connections.execute(sql, fetch=True)
+        data_type = result[1].rows[0][0]
+        return data_type
+
     def rename_relation(self, from_relation, to_relation):
         """
         Override method instead of calling the macro in adapters.sql
         because renaming views is complicated
         """
 
-        if from_relation.type == 'table':
+        # can't use from_relation.type b/c that reflects the project files, not actual state of db
+        existing_relation_type = self.get_live_relation_type(from_relation)
+
+        if existing_relation_type == 'table':
+
+            # legacy_alter_table is needed to avoid sqlite3 auto-updating references in downstream models,
+            # which causes all kinds of problems and confusion
+            self.connections.execute(f"PRAGMA legacy_alter_table=ON")
+
             self.connections.execute(f"ALTER TABLE {from_relation.schema}.{from_relation.identifier} RENAME TO {to_relation.identifier}")
-        elif from_relation.type == 'view':
+        elif existing_relation_type == 'view':
             result = self.connections.execute(f"""
                 SELECT sql FROM {from_relation.schema}.sqlite_master WHERE type = 'view' and name = '{from_relation.identifier}'
                 """, fetch=True)
