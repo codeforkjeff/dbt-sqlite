@@ -71,11 +71,6 @@ class SQLiteAdapter(SQLAdapter):
     def check_schema_exists(self, database: str, schema: str) -> bool:
         return schema in self.list_schemas(database)
 
-    def create_schema(self, relation: BaseRelation) -> None:
-        raise NotImplementedException(
-            '`create_schema` is not implemented for SQLite adapter, it should never be called'
-        )
-
     def get_columns_in_relation(self, relation):
 
         results = self.connections.execute(f"pragma {relation.schema}.table_info({relation.identifier})", fetch=True)

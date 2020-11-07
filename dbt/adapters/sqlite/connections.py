@@ -22,7 +22,8 @@ from dbt.logger import GLOBAL_LOGGER as logger
 class SQLiteCredentials(Credentials):
     """ Required connections for a SQLite connection"""
 
-    schema_paths: str
+    schemas_and_paths: str
+    schema_directory: str
 
     @property
     def type(self):
@@ -30,7 +31,7 @@ class SQLiteCredentials(Credentials):
 
     def _connection_keys(self):
         """ Keys to show when debugging """
-        return ["database", "schema", "schema_paths" ]
+        return ["database", "schema", "schemas_and_paths", "schema_directory" ]
 
 
 class SQLiteConnectionManager(SQLConnectionManager):
@@ -44,21 +45,21 @@ class SQLiteConnectionManager(SQLConnectionManager):
 
         credentials = connection.credentials
 
-        schema_paths = {}
-        for path_entry in credentials.schema_paths.split(";"):
+        schemas_and_paths = {}
+        for path_entry in credentials.schemas_and_paths.split(";"):
             schema, path = path_entry.split("=", 1)
-            schema_paths[schema] = path
+            schemas_and_paths[schema] = path
 
         try:
-            if 'main' in schema_paths:
-                handle: sqlite3.Connection = sqlite3.connect(schema_paths['main'])
+            if 'main' in schemas_and_paths:
+                handle: sqlite3.Connection = sqlite3.connect(schemas_and_paths['main'])
             else:
                 raise FailedToConnectException("at least one schema must be called 'main'")
             
             cursor = handle.cursor()
 
-            for schema in set(schema_paths.keys()) - set(['main']):
-                path = schema_paths[schema]
+            for schema in set(schemas_and_paths.keys()) - set(['main']):
+                path = schemas_and_paths[schema]
                 cursor.execute(f"attach '{path}' as '{schema}'")
 
             # # uncomment these lines to print out SQL: this only happens if statement is successful

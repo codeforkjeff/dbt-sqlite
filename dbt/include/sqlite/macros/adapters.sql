@@ -4,8 +4,22 @@
 {% endmacro %}
 
 {% macro sqlite__create_schema(database_name, schema_name, auto_begin=False) %}
-    {# no-op #}
-    {# see SQLiteAdapter.create_schema() #}
+  {% set path = '/'.join(adapter.config.credentials.schema_directory, schema_name, '.db') %}
+  {%- call statement('create_schema') -%}
+    attach database '{{ path }}' as {{ schema_name }}
+  {%- endcall -%}
+{% endmacro %}
+
+{% macro sqlite__drop_schema(relation) -%}
+  {# drop all tables in the schema, but leave the scgema itself alone. we can't detach 'main' #}
+
+  {% set relations_in_schema = list_relations_without_caching(relation.without_identifier().include(database=False)) %}
+
+  {% for row in relations_in_schema %}
+      {%- call statement('drop_relation_in_schema') -%}
+        drop {{ row.data_type}} {{ row.schema }}.{{ row.name }}
+      {%- endcall -%}
+  {% endfor %}
 {% endmacro %}
 
 {% macro sqlite__drop_relation(relation) -%}
@@ -59,23 +73,11 @@
   {# see SQLiteAdapter.rename_relation() #}
 {% endmacro %}
 
-{% macro sqlite__get_columns_in_relation(relation) -%}
-    {% call statement('get_columns_in_relation', fetch_result=True) %}
-        -- TODO: implement this in SQLite
-        select 
-            column_name
-            , data_type
-            , character_maximum_length
-            , numeric_precision
-            , numeric_scale
-        from 
-            information_schema.columns
-        where 
-            table_catalog    = '{{ relation.database }}'
-            and table_schema = '{{ relation.schema }}'
-            and table_name   = '{{ relation.identifier }}'
-    {% endcall %}
+{% macro sqlite__snapshot_get_time() -%}
+  datetime()
+{%- endmacro %}
 
-    {% set table = load_result('get_columns_in_relation').table %}
-    {{ return(sql_convert_columns_in_relation(table)) }}
-{% endmacro %}
+{% macro sqlite__snapshot_string_as_time(timestamp) -%}
+    {# just return the string; SQLite doesn't have a timestamp data type per se #}
+    {{ return(result) }}
+{%- endmacro %}

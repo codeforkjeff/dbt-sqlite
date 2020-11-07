@@ -22,10 +22,12 @@ dbt_sqlite:
       threads: 1
       # value of 'database' is arbitrary
       database: "database"
-      # must be defined in schema_paths below. in most cases, this should be 'main'
+      # value of 'schema' must be defined in schema_paths below. in most cases, this should be 'main'
       schema: 'main'
-      # schemas and paths; at least one of these must be 'main'
-      schema_paths: 'main=/home/jeff/etl.db;raw_data=/home/jeff/raw_data.db'
+      # connect schemas to paths: at least one of these must be 'main'
+      schemas_and_paths: 'main=/my_project/data/etl.db;dataset=/my_project/data/dataset_v1.db'
+      # directory where new schemas are created by dbt as new database files
+      schema_directory: '/myproject/data/schemas'
 ```
 
 Set `profile: 'dbt_sqlite'` in your project's `dbt_project.yml` file.
@@ -37,16 +39,9 @@ stripped from the output of `ref()` and from SQL everywhere. It still
 needs to be set in the configuration and is used by dbt internally.
 
 - Schema are implemented as attached database files. SQLite automatically
-assigns 'main' to the database file you initially connect to.
-
-- Creating schemas is (not yet?) supported. There would need to be a way
-to create paths for database files on the fly for the new schema that are
-created. This impacts several features:
-
-  - [Custom schemas](https://docs.getdbt.com/docs/building-a-dbt-project/building-models/using-custom-schemas/) - 
-dbt creates new "sub project" schemas for custom schemas, so this won't work.
-
-  - ephemeral materializations needs to create schemas, so this won't work.
+assigns 'main' to the database file you initially connect to. (TODO: add warning
+about references and renaming schemas/database files, and what creating/schemas
+does)
 
 - SQLite does not allow views in one schema (i.e. database file) to reference
 objects in another schema. You'll get this error from SQLite: "view [someview]
