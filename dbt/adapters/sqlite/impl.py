@@ -1,6 +1,6 @@
 
 import re
-from typing import List, Set
+from typing import List, Optional, Set
 
 import agate
 from dbt.adapters.base.relation import BaseRelation, InformationSchema
@@ -72,24 +72,38 @@ class SQLiteAdapter(SQLAdapter):
         return schema in self.list_schemas(database)
 
     def get_columns_in_relation(self, relation):
+        _, results = self.connections.execute(f"pragma {relation.schema}.table_info({relation.identifier})", fetch=True)
 
-        results = self.connections.execute(f"pragma {relation.schema}.table_info({relation.identifier})", fetch=True)
+        new_rows = []
+        for row in results:
+            new_row = [
+                row[1],
+                row[2] or 'TEXT',
+                None,
+                None,
+                None
+            ]
+            new_rows.append(new_row)
 
-        # TODO: transform this using agate table
+        column_names = [
+            'column_name',
+            'data_type',
+            'character_maximum_length',
+            'numeric_precision',
+            'numeric_scale'
+        ]
 
-        # column_name
-        # , data_type
-        # , character_maximum_length
-        # , numeric_precision
-        # , numeric_scale
+        table = agate.Table(new_rows, column_names)
 
-        raise NotImplementedException(
-                '`get_columns_in_relation` needs to be implemented for SQLite adapter'
-            )
+        kwargs = {
+            'table': table
+        }
 
-        # what does sql_convert_columns_in_relation macro do?
-
-        # return(results)
+        result = self.execute_macro(
+            'sql_convert_columns_in_relation',
+            kwargs=kwargs
+        )
+        return result
 
     def _get_one_catalog(
         self,
@@ -159,3 +173,62 @@ class SQLiteAdapter(SQLAdapter):
 
         results = self._catalog_filter_table(table, manifest)
         return results
+
+    def get_rows_different_sql(
+        self,
+        relation_a: BaseRelation,
+        relation_b: BaseRelation,
+        column_names: Optional[List[str]] = None,
+        except_operator: str = 'EXCEPT',
+    ) -> str:
+        # This method only really exists for test reasons.
+        names: List[str]
+        if column_names is None:
+            columns = self.get_columns_in_relation(relation_a)
+            names = sorted((self.quote(c.name) for c in columns))
+        else:
+            names = sorted((self.quote(n) for n in column_names))
+        columns_csv = ', '.join(names)
+
+        # difference from base class: sqlite requires SELECTs around UNION
+        # queries
+        COLUMNS_EQUAL_SQL = '''
+        with diff_count as (
+            SELECT
+                1 as id,
+                COUNT(*) as num_missing FROM (
+                    SELECT * FROM
+                    (SELECT {columns} FROM {relation_a} {except_op}
+                     SELECT {columns} FROM {relation_b}) t1
+                     UNION ALL
+                    SELECT * FROM
+                    (SELECT {columns} FROM {relation_b} {except_op}
+                     SELECT {columns} FROM {relation_a}) t2
+                ) as a
+        ), table_a as (
+            SELECT COUNT(*) as num_rows FROM {relation_a}
+        ), table_b as (
+            SELECT COUNT(*) as num_rows FROM {relation_b}
+        ), row_count_diff as (
+            select
+                1 as id,
+                table_a.num_rows - table_b.num_rows as difference
+            from table_a, table_b
+        )
+        select
+            row_count_diff.difference as row_count_difference,
+            diff_count.num_missing as num_mismatched
+        from row_count_diff
+        join diff_count using (id)
+        '''.strip()
+
+        # render relations w/o database
+        sql = COLUMNS_EQUAL_SQL.format(
+            columns=columns_csv,
+            relation_a=str(relation_a.include(database=False)),
+            relation_b=str(relation_b.include(database=False)),
+            except_op=except_operator,
+        )
+
+        return sql
+
