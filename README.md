@@ -53,6 +53,13 @@ objects in another schema. You'll get this error from SQLite: "view [someview]
 cannot reference objects in database [somedatabase]". You must set
 `materialized='table'` in models that reference other schemas.
 
+- Materializations are simplified: they drop and re-create the model, instead of
+doing the backup-and-swap-in new mode that the other dbt database adapters
+support. This choice was made because SQLite doesn't support `DROP ... CASCADE`
+or `ALTER VIEW` or provide information about relation dependencies in a
+information_schema-like relation. Taken together, these limitations make it really
+difficult to make the backup-and-swap-in functionality work properly.
+
 - Columns with numeric data in seed files won't load correctly unless you
 explicitly specify 'int' datatype in the seeds configuration. You'll get an error
 like "Error binding parameter N - probably unsupported type." (This doesn't
