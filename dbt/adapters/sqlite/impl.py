@@ -1,4 +1,5 @@
 
+import re
 from typing import List, Set
 
 import agate
@@ -16,7 +17,6 @@ class SQLiteAdapter(SQLAdapter):
     def date_function(cls):
         return 'date()'
 
-
     def get_live_relation_type(self, relation):
         """
         returns the type of relation (table, view) from the live database
@@ -31,34 +31,16 @@ class SQLiteAdapter(SQLAdapter):
         Override method instead of calling the macro in adapters.sql
         because renaming views is complicated
         """
+        self.cache_renamed(from_relation, to_relation)
 
-        # can't use from_relation.type b/c that reflects the project files, not actual state of db.
-        # I'm not sure why this is needed, since other postgres and others odn't seem to have
-        # this issue. this may be a patch for something else that's not working quite right
-        # in this adapter.
-        existing_relation_type = self.get_live_relation_type(from_relation)
+        existing_relation_type = from_relation.type
 
         if existing_relation_type == 'table':
 
-            # this is complicated:
-            #
-            # sqlite doesn't support DROP CASCADE. this means after it renames a table to a 'backup',
-            # (which updates references in views, like postgres does), dropping the backup won't drop
-            # the dependent views. the views remain, with "bad" references, and sqlite doesn't throw an
-            # error. when dbt tries to "rename" a view by dropping/re-creating its definition containing
-            # a bad reference, sqlite throws an error about the backup table not existing.
-            #
-            # workaround: use the legacy_alter_table pragma, so that when a table is renamed, views don't
-            # get their references auto-updated. this is gross non-standard behavior but it preserves the
-            # integrity of the downstream view, so it can be backed up. there may still be other problems
-            # (e.g. if you delete a table entirely from the project.)
-            #
-            # I think the real fix is to implement DROP CASCADE behavior in drop_relation
-
-            self.connections.execute(f"PRAGMA legacy_alter_table=ON")
-
             self.connections.execute(f"ALTER TABLE {from_relation.schema}.{from_relation.identifier} RENAME TO {to_relation.identifier}")
+
         elif existing_relation_type == 'view':
+
             result = self.connections.execute(f"""
                 SELECT sql FROM {from_relation.schema}.sqlite_master WHERE type = 'view' and name = '{from_relation.identifier}'
                 """, fetch=True)
@@ -100,8 +82,6 @@ class SQLiteAdapter(SQLAdapter):
 
         # TODO: transform this using agate table
 
-        print(results)
-
         # column_name
         # , data_type
         # , character_maximum_length
@@ -125,6 +105,8 @@ class SQLiteAdapter(SQLAdapter):
         """
         bad form to override this method but...
         """
+
+        self.verify_database(information_schema.data)
 
         # this does N+1 queries but there doesn't seem to be
         # any other way to do this
