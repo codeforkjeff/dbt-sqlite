@@ -106,8 +106,6 @@ class SQLiteAdapter(SQLAdapter):
         bad form to override this method but...
         """
 
-        self.verify_database(information_schema.data)
-
         # this does N+1 queries but there doesn't seem to be
         # any other way to do this
 
