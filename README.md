@@ -65,10 +65,16 @@ dbt 0.18.1. It's largely untested elsewhere.
 
 ## Development Notes / TODOs
 
-Need to implement:
-- get_columns_in_relation
 - Is it possible to override BaseRelation.render() in leave off the database
 part of the fully qualified relation name?
+
+- snapshots don't work yet
+
+- incremental materializations don't work yet
+
+- adapter tests don't specify column types when loading seeds, and this raises
+an error. agate infers the types, and sqlite doesn't like what gets passed into
+query bindings for insert.
 
 ## Running Tests
 
