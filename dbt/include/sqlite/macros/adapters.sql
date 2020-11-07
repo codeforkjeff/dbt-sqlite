@@ -13,7 +13,7 @@
 {% macro sqlite__drop_schema(relation) -%}
   {# drop all tables in the schema, but leave the scgema itself alone. we can't detach 'main' #}
 
-  {% set relations_in_schema = list_relations_without_caching(relation.without_identifier().include(database=False)) %}
+  {% set relations_in_schema = list_relations_without_caching(relation.without_identifier()) %}
 
   {% for row in relations_in_schema %}
       {%- call statement('drop_relation_in_schema') -%}
@@ -24,13 +24,13 @@
 
 {% macro sqlite__drop_relation(relation) -%}
     {% call statement('drop_relation', auto_begin=False) -%}
-        drop {{ relation.type }} if exists {{ relation.include(database=False) }}
+        drop {{ relation.type }} if exists {{ relation }}
     {%- endcall %}
 {% endmacro %}
 
 {% macro sqlite__truncate_relation(relation) -%}
     {% call statement('truncate_relation') -%}
-        delete from {{ relation.include(database=False) }}
+        delete from {{ relation }}
     {%- endcall %}
 {% endmacro %}
 
@@ -58,13 +58,13 @@
 {% macro sqlite__create_table_as(temporary, relation, sql) -%}
       create {% if temporary -%}
         temporary
-      {%- endif %} table {{ relation.include(database=False) }}
+      {%- endif %} table {{ relation }}
       as
         {{ sql }}
 {% endmacro %}
 
 {% macro sqlite__create_view_as(relation, sql, auto_begin=False) -%}
-    create view {{ relation.include(database=False) }} as
+    create view {{ relation }} as
     {{ sql }};
 {%- endmacro %}
 

@@ -65,9 +65,6 @@ dbt 0.18.1. It's largely untested elsewhere.
 
 ## Development Notes / TODOs
 
-- Is it possible to override BaseRelation.render() in leave off the database
-part of the fully qualified relation name?
-
 - snapshots don't work yet
 
 - incremental materializations don't work yet

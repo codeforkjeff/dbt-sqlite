@@ -6,12 +6,15 @@ import agate
 from dbt.adapters.base.relation import BaseRelation, InformationSchema
 from dbt.adapters.sql import SQLAdapter
 from dbt.adapters.sqlite import SQLiteConnectionManager
+from dbt.adapters.sqlite.relation import SQLiteRelation
 from dbt.contracts.graph.manifest import Manifest
 from dbt.exceptions import NotImplementedException
 
 
 class SQLiteAdapter(SQLAdapter):
     ConnectionManager = SQLiteConnectionManager
+
+    Relation = SQLiteRelation
 
     @classmethod
     def date_function(cls):
@@ -37,7 +40,7 @@ class SQLiteAdapter(SQLAdapter):
 
         if existing_relation_type == 'table':
 
-            self.connections.execute(f"ALTER TABLE {from_relation.include(database=False)} RENAME TO {to_relation.identifier}")
+            self.connections.execute(f"ALTER TABLE {from_relation} RENAME TO {to_relation.identifier}")
 
         elif existing_relation_type == 'view':
 
@@ -47,11 +50,11 @@ class SQLiteAdapter(SQLAdapter):
 
             definition = result[1].rows[0][0]
 
-            self.connections.execute(f"DROP VIEW {from_relation.include(database=False)}");
+            self.connections.execute(f"DROP VIEW {from_relation}");
 
-            self.connections.execute(f"DROP VIEW IF EXISTS {to_relation.include(database=False)}");
+            self.connections.execute(f"DROP VIEW IF EXISTS {to_relation}");
 
-            new_definition = definition.replace(from_relation.identifier, f"{to_relation.include(database=False)}", 1)
+            new_definition = definition.replace(from_relation.identifier, f"{to_relation}", 1)
 
             self.connections.execute(new_definition)
 
@@ -222,11 +225,10 @@ class SQLiteAdapter(SQLAdapter):
         join diff_count using (id)
         '''.strip()
 
-        # render relations w/o database
         sql = COLUMNS_EQUAL_SQL.format(
             columns=columns_csv,
-            relation_a=str(relation_a.include(database=False)),
-            relation_b=str(relation_b.include(database=False)),
+            relation_a=str(relation_a),
+            relation_b=str(relation_b),
             except_op=except_operator,
         )
 
