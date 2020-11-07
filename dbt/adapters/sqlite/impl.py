@@ -37,7 +37,7 @@ class SQLiteAdapter(SQLAdapter):
 
         if existing_relation_type == 'table':
 
-            self.connections.execute(f"ALTER TABLE {from_relation.schema}.{from_relation.identifier} RENAME TO {to_relation.identifier}")
+            self.connections.execute(f"ALTER TABLE {from_relation.include(database=False)} RENAME TO {to_relation.identifier}")
 
         elif existing_relation_type == 'view':
 
@@ -47,11 +47,11 @@ class SQLiteAdapter(SQLAdapter):
 
             definition = result[1].rows[0][0]
 
-            self.connections.execute(f"DROP VIEW {from_relation.schema}.{from_relation.identifier}");
+            self.connections.execute(f"DROP VIEW {from_relation.include(database=False)}");
 
-            self.connections.execute(f"DROP VIEW IF EXISTS {to_relation.schema}.{to_relation.identifier}");
+            self.connections.execute(f"DROP VIEW IF EXISTS {to_relation.include(database=False)}");
 
-            new_definition = definition.replace(from_relation.identifier, f"{to_relation.schema}.{to_relation.identifier}", 1)
+            new_definition = definition.replace(from_relation.identifier, f"{to_relation.include(database=False)}", 1)
 
             self.connections.execute(new_definition)
 

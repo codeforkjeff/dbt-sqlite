@@ -24,13 +24,13 @@
 
 {% macro sqlite__drop_relation(relation) -%}
     {% call statement('drop_relation', auto_begin=False) -%}
-        drop {{ relation.type }} if exists {{ relation.schema }}.{{ relation.identifier }}
+        drop {{ relation.type }} if exists {{ relation.include(database=False) }}
     {%- endcall %}
 {% endmacro %}
 
 {% macro sqlite__truncate_relation(relation) -%}
     {% call statement('truncate_relation') -%}
-        delete from {{ relation.schema }}.{{ relation.identifier }}
+        delete from {{ relation.include(database=False) }}
     {%- endcall %}
 {% endmacro %}
 
@@ -58,13 +58,13 @@
 {% macro sqlite__create_table_as(temporary, relation, sql) -%}
       create {% if temporary -%}
         temporary
-      {%- endif %} table {{ relation.schema }}.{{ relation.identifier }}
+      {%- endif %} table {{ relation.include(database=False) }}
       as
         {{ sql }}
 {% endmacro %}
 
 {% macro sqlite__create_view_as(relation, sql, auto_begin=False) -%}
-    create view {{ relation.schema }}.{{ relation.identifier }} as
+    create view {{ relation.include(database=False) }} as
     {{ sql }};
 {%- endmacro %}
 
