@@ -70,6 +70,20 @@ Need to implement:
 - Is it possible to override BaseRelation.render() in leave off the database
 part of the fully qualified relation name?
 
+## Running Tests
+
+Install the `pytest-dbt-adapter` package and run the test specs in this repository:
+
+```
+pip install pytest-dbt-adapter
+
+# these paths need to exist for tests to write data
+mkdir -p /tmp/dbt-sqlite-tests
+mkdir -p /tmp/dbt-sqlite-tests/schemas
+
+pytest test/sqlite.dbtspec
+```
+
 ## Credits
 
 Inspired by this initial work by stephen1000: https://github.com/stephen1000/dbt_sqlite
