@@ -79,7 +79,7 @@
 
 {% macro sqlite__snapshot_string_as_time(timestamp) -%}
     {# just return the string; SQLite doesn't have a timestamp data type per se #}
-    {{ return(result) }}
+    {{ return("'" + timestamp|string + "'") }}
 {%- endmacro %}
 
 {#
