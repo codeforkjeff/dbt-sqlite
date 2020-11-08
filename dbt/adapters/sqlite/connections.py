@@ -24,6 +24,7 @@ class SQLiteCredentials(Credentials):
 
     schemas_and_paths: str
     schema_directory: str
+    extensions: Optional[str]
 
     @property
     def type(self):
@@ -55,6 +56,12 @@ class SQLiteConnectionManager(SQLConnectionManager):
                 handle: sqlite3.Connection = sqlite3.connect(schemas_and_paths['main'])
             else:
                 raise FailedToConnectException("at least one schema must be called 'main'")
+
+            handle.enable_load_extension(True)
+
+            extensions = [e for e in (connection.credentials.extensions or "").split(";") if e]
+            for ext_path in extensions:
+                handle.load_extension(ext_path)
             
             cursor = handle.cursor()
 

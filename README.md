@@ -28,6 +28,11 @@ dbt_sqlite:
       schemas_and_paths: 'main=/my_project/data/etl.db;dataset=/my_project/data/dataset_v1.db'
       # directory where new schemas are created by dbt as new database files
       schema_directory: '/myproject/data/schemas'
+      # optional: semi-colon separated list of file paths for SQLite extensions to load.
+      # digesto.so is needed to provide the md5 function needed for snapshots to work.
+      # see section in README on how to install it
+      extensions: "/path/to/sqlite-digest/digest.so"
+
 ```
 
 Set `profile: 'dbt_sqlite'` in your project's `dbt_project.yml` file.
@@ -58,9 +63,26 @@ difficult to make the backup-and-swap-in functionality work properly.
 - This has been developed on Ubuntu 20.04, Python 3.8.5 (with sqlite 3.31.1),
 dbt 0.18.1. It's largely untested elsewhere.
 
+## Building the digest extension for SQLite
+
+For snapshots to work, you need to build the `digest` extension. On Ubuntu, run:
+
+```
+git clone https://github.com/mpdn/sqlite-digest
+
+cd sqlite-digest
+
+sudo apt install gcc libssl-dev libsqlite3-dev
+
+make
+```
+
+This will create `digest.so`. Point to it in your profile config as shown in the
+example above.
+
 ## Development Notes / TODOs
 
-- snapshots don't work yet
+- snapshots don't quite work yet, but getting there
 
 - incremental materializations seem to work but incremental test in the adapter
 suite fails for some reason
