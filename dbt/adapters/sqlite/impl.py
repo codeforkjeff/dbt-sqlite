@@ -1,8 +1,10 @@
 
+import decimal
 import re
 from typing import List, Optional, Set
 
 import agate
+from dbt.adapters.base import available
 from dbt.adapters.base.relation import BaseRelation, InformationSchema
 from dbt.adapters.sql import SQLAdapter
 from dbt.adapters.sqlite import SQLiteConnectionManager
@@ -234,3 +236,24 @@ class SQLiteAdapter(SQLAdapter):
 
         return sql
 
+    def _transform_seed_value(self, value):
+        new_value = value
+        if isinstance(value, decimal.Decimal):
+            new_value = str(value)
+        return new_value
+
+    @available
+    def transform_seed_row(self, row):
+        """
+        sqlite3 chokes on Decimal values (emitted by agate) in
+        bound values so convert those to strings. there may be other
+        types that need to be added here.
+
+        This is the error that comes up:
+        "Error binding parameter 0 - probably unsupported type."
+
+        see dbt.clients.agate_helper.build_type_tester() for the
+        TypeTester passed to agate when parsing CSVs.
+
+        """
+        return [self._transform_seed_value(value) for value in row]

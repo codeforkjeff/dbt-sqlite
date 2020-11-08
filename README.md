@@ -55,11 +55,6 @@ or `ALTER VIEW` or provide information about relation dependencies in a
 information_schema-like relation. Taken together, these limitations make it really
 difficult to make the backup-and-swap-in functionality work properly.
 
-- Columns with numeric data in seed files won't load correctly unless you
-explicitly specify 'int' datatype in the seeds configuration. You'll get an error
-like "Error binding parameter N - probably unsupported type." (This doesn't
-happen with postgres.)
-
 - This has been developed on Ubuntu 20.04, Python 3.8.5 (with sqlite 3.31.1),
 dbt 0.18.1. It's largely untested elsewhere.
 
@@ -68,10 +63,6 @@ dbt 0.18.1. It's largely untested elsewhere.
 - snapshots don't work yet
 
 - incremental materializations don't work yet
-
-- adapter tests don't specify column types when loading seeds, and this raises
-an error. agate infers the types, and sqlite doesn't like what gets passed into
-query bindings for insert.
 
 ## Running Tests
 

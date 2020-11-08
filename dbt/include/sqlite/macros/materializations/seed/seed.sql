@@ -33,7 +33,8 @@
         {% set bindings = [] %}
 
         {% for row in chunk %}
-            {% do bindings.extend(row) %}
+            {% set processed_row = adapter.transform_seed_row(row) %}
+            {% do bindings.extend(processed_row) %}
         {% endfor %}
 
         {% set sql %}
