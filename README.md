@@ -103,6 +103,9 @@ mkdir -p /tmp/dbt-sqlite-tests/schemas
 pytest test/sqlite.dbtspec
 ```
 
+Remember to delete the database file referenced in `test/sqlite.dbtspec`
+between runs of pytest, otherwise leftover state from failures can mess up subsequent test runs.
+
 ## Credits
 
 Inspired by this initial work by stephen1000: https://github.com/stephen1000/dbt_sqlite

@@ -39,6 +39,8 @@ class SQLiteAdapter(SQLAdapter):
         self.cache_renamed(from_relation, to_relation)
 
         existing_relation_type = from_relation.type
+        print("existing_relation_type=" + existing_relation_type)
+        print("IS_VIEW=" + str(from_relation.is_view))
 
         if existing_relation_type == 'table':
 
@@ -257,3 +259,8 @@ class SQLiteAdapter(SQLAdapter):
 
         """
         return [self._transform_seed_value(value) for value in row]
+
+    def timestamp_add_sql(
+        self, add_to: str, number: int = 1, interval: str = 'hour'
+    ) -> str:
+        return f"DATETIME({add_to}, '{number} {interval}')"
