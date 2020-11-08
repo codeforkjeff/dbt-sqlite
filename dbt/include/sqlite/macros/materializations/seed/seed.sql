@@ -33,6 +33,7 @@
         {% set bindings = [] %}
 
         {% for row in chunk %}
+            {# transform rows so sqlite is happy with data types #}
             {% set processed_row = adapter.transform_seed_row(row) %}
             {% do bindings.extend(processed_row) %}
         {% endfor %}
