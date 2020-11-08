@@ -12,22 +12,29 @@ Install this package.
 
 Create an entry in your `~/.dbt/profiles.yml` file with the following configuration:
 
-```
+```YAML
 dbt_sqlite:
 
   target: dev
   outputs:
     dev:
       type: sqlite
+
+      # sqlite locks the whole db on writes so anything > 1 won't help
       threads: 1
+
       # value of 'database' is arbitrary
       database: "database"
+
       # value of 'schema' must be defined in schema_paths below. in most cases, this should be 'main'
       schema: 'main'
+
       # connect schemas to paths: at least one of these must be 'main'
       schemas_and_paths: 'main=/my_project/data/etl.db;dataset=/my_project/data/dataset_v1.db'
+
       # directory where new schemas are created by dbt as new database files
       schema_directory: '/myproject/data/schemas'
+
       # optional: semi-colon separated list of file paths for SQLite extensions to load.
       # digesto.so is needed to provide the md5 function needed for snapshots to work.
       # see section in README on how to install it
@@ -43,15 +50,26 @@ Set `profile: 'dbt_sqlite'` in your project's `dbt_project.yml` file.
 stripped from the output of `ref()` and from SQL everywhere. It still
 needs to be set in the configuration and is used by dbt internally.
 
-- Schema are implemented as attached database files. SQLite automatically
-assigns 'main' to the database file you initially connect to. (TODO: add warning
-about references and renaming schemas/database files, and what creating/schemas
-does)
+- Schema are implemented as attached database files. (SQLite conflates databases
+and schemas.)
 
-- SQLite does not allow views in one schema (i.e. database file) to reference
-objects in another schema. You'll get this error from SQLite: "view [someview]
-cannot reference objects in database [somedatabase]". You must set
-`materialized='table'` in models that reference other schemas.
+  - SQLite automatically assigns 'main' to the file you initially connect to,
+  so this must be defined in your profile. Other schemas defined in your profile
+  get attached when database connection is created.
+
+  - If dbt needs to create a new schema, it will be created in `schema_directory`.
+  Dropping a schema results in dropping all its relations but NOT detaching the
+  database, since this may result in a confusing conflict with the schemas you
+  defined in your profile.
+
+  - Schema names are stored in view definitions, so when you access a non-'main'
+  database file outside dbt, you'll need to attach it using the same name, or
+  the views won't work.
+
+  - SQLite does not allow views in one schema (i.e. database file) to reference
+  objects in another schema. You'll get this error from SQLite: "view [someview]
+  cannot reference objects in database [somedatabase]". You must set
+  `materialized='table'` in models that reference other schemas.
 
 - Materializations are simplified: they drop and re-create the model, instead of
 doing the backup-and-swap-in new mode that the other dbt database adapters
@@ -84,10 +102,7 @@ example above.
 
 ## Development Notes / TODOs
 
-- snapshots don't quite work yet, but getting there
-
-- incremental materializations seem to work but incremental test in the adapter
-suite fails for some reason
+...
 
 ## Running Tests
 
@@ -110,3 +125,8 @@ between runs of pytest, otherwise leftover state from failures can mess up subse
 
 Inspired by this initial work by stephen1000: https://github.com/stephen1000/dbt_sqlite
 
+https://github.com/jwills/dbt-duckdb/ - useful for ideas on working with
+another embedded database
+
+https://github.com/fishtown-analytics/dbt-spark/ - spark also has two-part
+relation names (no 'database')
