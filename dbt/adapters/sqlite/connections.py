@@ -1,6 +1,8 @@
 
 from contextlib import contextmanager
 from dataclasses import dataclass
+import glob
+import os.path
 import sqlite3
 from typing import List, Optional, Tuple, Any, Iterable, Dict
 
@@ -65,8 +67,17 @@ class SQLiteConnectionManager(SQLConnectionManager):
             
             cursor = handle.cursor()
 
+            attached = []
             for schema in set(schemas_and_paths.keys()) - set(['main']):
                 path = schemas_and_paths[schema]
+                cursor.execute(f"attach '{path}' as '{schema}'")
+                attached.append(schema)
+
+            for path in glob.glob(os.path.join(credentials.schema_directory, "*.db")):
+                schema = os.path.basename(path)[:-3]
+                if path in schema:
+                    raise DatabaseException(
+                        f"cannot attach schema '{schema}': defined in profile but also exists in schema_directory: {path}")
                 cursor.execute(f"attach '{path}' as '{schema}'")
 
             # # uncomment these lines to print out SQL: this only happens if statement is successful

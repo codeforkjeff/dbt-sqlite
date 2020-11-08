@@ -23,7 +23,7 @@ dbt_sqlite:
       # sqlite locks the whole db on writes so anything > 1 won't help
       threads: 1
 
-      # value of 'database' is arbitrary
+      # value is arbitrary
       database: "database"
 
       # value of 'schema' must be defined in schema_paths below. in most cases,
@@ -33,11 +33,11 @@ dbt_sqlite:
       # connect schemas to paths: at least one of these must be 'main'
       schemas_and_paths: 'main=/my_project/data/etl.db;dataset=/my_project/data/dataset_v1.db'
 
-      # directory where new schemas are created by dbt as new database files
+      # directory where all *.db files are attached as schema
       schema_directory: '/myproject/data/schemas'
 
       # optional: semi-colon separated list of file paths for SQLite extensions to load.
-      # digesto.so is needed to provide the md5 function needed for snapshots to work.
+      # digest.so is needed to provide the md5 function needed for snapshots to work.
       # see section in README on how to install it
       extensions: "/path/to/sqlite-digest/digest.so"
 
@@ -58,10 +58,9 @@ and schemas.)
   so this must be defined in your profile. Other schemas defined in your profile
   get attached when database connection is created.
 
-  - If dbt needs to create a new schema, it will be created in `schema_directory`.
-  Dropping a schema results in dropping all its relations but NOT detaching the
-  database, since this may result in a confusing conflict with the schemas you
-  defined in your profile.
+  - If dbt needs to create a new schema, it will be created in `schema_directory`
+  as `schema_name.db`. Dropping a schema results in dropping all its relations
+  and detaching the database file from the session.
 
   - Schema names are stored in view definitions, so when you access a non-'main'
   database file outside dbt, you'll need to attach it using the same name, or

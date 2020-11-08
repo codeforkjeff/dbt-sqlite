@@ -264,3 +264,10 @@ class SQLiteAdapter(SQLAdapter):
         self, add_to: str, number: int = 1, interval: str = 'hour'
     ) -> str:
         return f"DATETIME({add_to}, '{number} {interval}')"
+
+    def drop_schema(self, relation: BaseRelation) -> None:
+        super().drop_schema(relation)
+
+        # never detach main
+        if relation.schema != 'main':
+            self.connections.execute(f"DETACH DATABASE {relation.schema}")

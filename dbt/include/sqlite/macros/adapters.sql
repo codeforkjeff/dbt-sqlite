@@ -3,15 +3,15 @@
     {# see SQLiteAdapter.list_schemas() #}
 {% endmacro %}
 
-{% macro sqlite__create_schema(database_name, schema_name, auto_begin=False) %}
-  {% set path = '/'.join(adapter.config.credentials.schema_directory, schema_name, '.db') %}
+{% macro sqlite__create_schema(relation, auto_begin=False) %}
+  {% set path = [ adapter.config.credentials.schema_directory, relation.without_identifier().include(database=False) | string + '.db' ] | join('/') %}
   {%- call statement('create_schema') -%}
-    attach database '{{ path }}' as {{ schema_name }}
+    attach database '{{ path }}' as {{ relation.without_identifier().include(database=False) }}
   {%- endcall -%}
 {% endmacro %}
 
 {% macro sqlite__drop_schema(relation) -%}
-  {# drop all tables in the schema, but leave the scgema itself alone. we can't detach 'main' #}
+  {# drop all tables in the schema; detaching happens in the adapter class #}
 
   {% set relations_in_schema = list_relations_without_caching(relation.without_identifier()) %}
 
