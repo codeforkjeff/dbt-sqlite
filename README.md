@@ -1,10 +1,10 @@
 
 # dbt-sqlite
 
-A SQLite adapter plugin for dbt (data build tool)
+A [SQLite](https://sqlite.org) adapter plugin for dbt (data build tool)
 
-This is an 'experimental' plugin. Features are missing, need to be
-implemented, or broken. Use at your own risk. Issues and PRs welcome!
+This is an experimental plugin. Please read these docs carefully and
+use at your own risk. Issues and PRs welcome!
 
 ## How to Use This
 
@@ -56,9 +56,11 @@ cannot reference objects in database [somedatabase]". You must set
 - Materializations are simplified: they drop and re-create the model, instead of
 doing the backup-and-swap-in new mode that the other dbt database adapters
 support. This choice was made because SQLite doesn't support `DROP ... CASCADE`
-or `ALTER VIEW` or provide information about relation dependencies in a
-information_schema-like relation. Taken together, these limitations make it really
-difficult to make the backup-and-swap-in functionality work properly.
+or `ALTER VIEW` or provide information about relation dependencies in something
+information_schema-like. These limitations make it really difficult to make the
+backup-and-swap-in functionality work properly. Given how SQLite aggressively
+[locks](https://sqlite.org/lockingv3.html) the database anyway, it's probably
+not worth the effort.
 
 - This has been developed on Ubuntu 20.04, Python 3.8.5 (with sqlite 3.31.1),
 dbt 0.18.1. It's largely untested elsewhere.
