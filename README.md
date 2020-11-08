@@ -26,7 +26,8 @@ dbt_sqlite:
       # value of 'database' is arbitrary
       database: "database"
 
-      # value of 'schema' must be defined in schema_paths below. in most cases, this should be 'main'
+      # value of 'schema' must be defined in schema_paths below. in most cases,
+      # this should be 'main'
       schema: 'main'
 
       # connect schemas to paths: at least one of these must be 'main'
