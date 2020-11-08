@@ -39,8 +39,6 @@ class SQLiteAdapter(SQLAdapter):
         self.cache_renamed(from_relation, to_relation)
 
         existing_relation_type = from_relation.type
-        print("existing_relation_type=" + existing_relation_type)
-        print("IS_VIEW=" + str(from_relation.is_view))
 
         if existing_relation_type == 'table':
 
