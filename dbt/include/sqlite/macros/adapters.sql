@@ -81,3 +81,15 @@
     {# just return the string; SQLite doesn't have a timestamp data type per se #}
     {{ return(result) }}
 {%- endmacro %}
+
+{#
+the only allowable schema for temporary tables in SQLite is 'temp', so set
+that here when making the relation and everything else should Just Work
+#}
+{% macro sqlite__make_temp_relation(base_relation, suffix) %}
+    {% set tmp_identifier = base_relation.identifier ~ suffix %}
+    {% set tmp_relation = base_relation.incorporate(
+                                path={"schema": "temp", "identifier": tmp_identifier}) -%}
+
+    {% do return(tmp_relation) %}
+{% endmacro %}

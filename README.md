@@ -62,7 +62,8 @@ dbt 0.18.1. It's largely untested elsewhere.
 
 - snapshots don't work yet
 
-- incremental materializations don't work yet
+- incremental materializations seem to work but incremental test in the adapter
+suite fails for some reason
 
 ## Running Tests
 
