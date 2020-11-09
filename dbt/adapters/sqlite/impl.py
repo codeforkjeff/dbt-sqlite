@@ -1,6 +1,5 @@
 
 import decimal
-import re
 from typing import List, Optional, Set
 
 import agate
@@ -47,21 +46,24 @@ class SQLiteAdapter(SQLAdapter):
         elif existing_relation_type == 'view':
 
             result = self.connections.execute(f"""
-                SELECT sql FROM {from_relation.schema}.sqlite_master WHERE type = 'view' and name = '{from_relation.identifier}'
+                SELECT sql FROM {from_relation.schema}.sqlite_master
+                WHERE type = 'view' and name = '{from_relation.identifier}'
                 """, fetch=True)
 
             definition = result[1].rows[0][0]
 
-            self.connections.execute(f"DROP VIEW {from_relation}");
+            self.connections.execute(f"DROP VIEW {from_relation}")
 
-            self.connections.execute(f"DROP VIEW IF EXISTS {to_relation}");
+            self.connections.execute(f"DROP VIEW IF EXISTS {to_relation}")
 
             new_definition = definition.replace(from_relation.identifier, f"{to_relation}", 1)
 
             self.connections.execute(new_definition)
 
         else:
-            raise NotImplementedException(f"I don't know how to rename this type of relation: {from_relation.type}, from: {from_relation}, to: {to_relation}")
+            raise NotImplementedException(
+                f"I don't know how to rename this type of relation: {from_relation.type}," +
+                f" from: {from_relation}, to: {to_relation}")
 
     def list_schemas(self, database: str) -> List[str]:
         """
@@ -143,7 +145,7 @@ class SQLiteAdapter(SQLAdapter):
 
             for relation_row in results[1]:
                 name = relation_row['name']
-                relation_type= relation_row['data_type']
+                relation_type = relation_row['data_type']
 
                 table_info = self.connections.execute(
                     f"pragma {schema}.table_info({name})", fetch=True)

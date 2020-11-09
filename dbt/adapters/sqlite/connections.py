@@ -4,18 +4,16 @@ from dataclasses import dataclass
 import glob
 import os.path
 import sqlite3
-from typing import List, Optional, Tuple, Any, Iterable, Dict
+from typing import Optional, Tuple, Any
 
 
 from dbt.adapters.base import Credentials
 from dbt.adapters.sql import SQLConnectionManager
-from dbt.contracts.connection import Connection, ConnectionState
+from dbt.contracts.connection import Connection
 from dbt.exceptions import (
     DatabaseException,
     FailedToConnectException,
-    InternalException,
-    RuntimeException,
-    warn_or_error,
+    RuntimeException
 )
 from dbt.logger import GLOBAL_LOGGER as logger
 

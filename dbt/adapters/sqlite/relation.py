@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
 from dbt.adapters.base.relation import BaseRelation, Policy
-from dbt.exceptions import RuntimeException
 
 
 @dataclass
@@ -22,4 +21,3 @@ class SQLiteIncludePolicy(Policy):
 class SQLiteRelation(BaseRelation):
     quote_policy: SQLiteQuotePolicy = SQLiteQuotePolicy()
     include_policy: SQLiteIncludePolicy = SQLiteIncludePolicy()
-
