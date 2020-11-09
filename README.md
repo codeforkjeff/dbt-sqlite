@@ -37,8 +37,7 @@ dbt_sqlite:
       schema_directory: '/myproject/data/schemas'
 
       # optional: semi-colon separated list of file paths for SQLite extensions to load.
-      # digest.so is needed to provide the md5 function needed for snapshots to work.
-      # see section in README on how to install it
+      # digest.so is needed to provide for snapshots to work; see README
       extensions: "/path/to/sqlite-digest/digest.so"
 
 ```
@@ -85,7 +84,8 @@ dbt 0.18.1. It's largely untested elsewhere.
 
 ## Building the digest extension for SQLite
 
-For snapshots to work, you need to build the `digest` extension. On Ubuntu, run:
+For snapshots to work, you need to build the `digest` extension to get an `md5()`
+function. On Ubuntu, run:
 
 ```
 git clone https://github.com/mpdn/sqlite-digest
