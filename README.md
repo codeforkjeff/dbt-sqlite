@@ -8,7 +8,7 @@ use at your own risk. Issues and PRs welcome!
 
 ## How to Use This
 
-Install this package.
+Install this package: `pip install dbt-sqlite`
 
 Create an entry in your `~/.dbt/profiles.yml` file with the following configuration:
 
