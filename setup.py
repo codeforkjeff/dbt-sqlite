@@ -14,13 +14,16 @@ setup(
     author='Jeff Chiu',
     author_email='jeff@codefork.com',
     url='https://github.com/codeforkjeff/dbt-sqlite',
-    packages=find_packages(),
+    packages=[
+        'dbt.adapters.sqlite',
+        'dbt.include.sqlite',
+    ],
     package_data={
-        'dbt': [
-            'include/sqlite/macros/*.sql',
-            'include/sqlite/macros/**/*.sql',
-            'include/sqlite/macros/**/**/*.sql',
-            'include/sqlite/dbt_project.yml',
+        'dbt.include.sqlite': [
+            'macros/*.sql',
+            'macros/**/*.sql',
+            'macros/**/**/*.sql',
+            'dbt_project.yml',
         ]
     },
     install_requires=[
