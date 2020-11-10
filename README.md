@@ -33,8 +33,10 @@ dbt_sqlite:
       # connect schemas to paths: at least one of these must be 'main'
       schemas_and_paths: 'main=/my_project/data/etl.db;dataset=/my_project/data/dataset_v1.db'
 
-      # directory where all *.db files are attached as schema
-      schema_directory: '/myproject/data/schemas'
+      # directory where all *.db files are attached as schema, using base filename 
+      # as schema name, and where new schema are created. this can overlap with the dirs of
+      # files in schemas_and_paths as long as there's no conflicts.
+      schema_directory: '/myproject/data'
 
       # optional: semi-colon separated list of file paths for SQLite extensions to load.
       # digest.so is needed to provide for snapshots to work; see README
@@ -111,9 +113,8 @@ Install the `pytest-dbt-adapter` package and run the test specs in this reposito
 ```
 pip install pytest-dbt-adapter
 
-# these paths need to exist for tests to write data
+# this path needs to exist for tests to write database file
 mkdir -p /tmp/dbt-sqlite-tests
-mkdir -p /tmp/dbt-sqlite-tests/schemas
 
 pytest test/sqlite.dbtspec
 ```

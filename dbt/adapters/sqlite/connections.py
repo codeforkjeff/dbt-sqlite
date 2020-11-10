@@ -49,7 +49,8 @@ class SQLiteConnectionManager(SQLConnectionManager):
         schemas_and_paths = {}
         for path_entry in credentials.schemas_and_paths.split(";"):
             schema, path = path_entry.split("=", 1)
-            schemas_and_paths[schema] = path
+            # store abs path so we can tell if we've attached the file already
+            schemas_and_paths[schema] = os.path.abspath(path)
 
         try:
             if 'main' in schemas_and_paths:
@@ -72,11 +73,20 @@ class SQLiteConnectionManager(SQLConnectionManager):
                 attached.append(schema)
 
             for path in glob.glob(os.path.join(credentials.schema_directory, "*.db")):
-                schema = os.path.basename(path)[:-3]
-                if path in schema:
-                    raise DatabaseException(
-                        f"cannot attach schema '{schema}': defined in profile but also exists in schema_directory: {path}")
-                cursor.execute(f"attach '{path}' as '{schema}'")
+                abs_path = os.path.abspath(path)
+
+                # if file was already attached from being defined in schemas_and_paths, ignore it
+                if not abs_path in schemas_and_paths.values():
+                    schema = os.path.basename(path)[:-3]
+
+                    # has schema name been used already?
+                    if schema not in attached:
+                        cursor.execute(f"attach '{path}' as '{schema}'")
+                    else:
+                        raise FailedToConnectException(
+                            f"found {path} while scanning schema_directory, but cannot attach it as '{schema}' " +
+                            f"because that schema name is already defined in schemas_and_paths. " +
+                            f"fix your ~/.dbt/profiles.yml file")
 
             # # uncomment these lines to print out SQL: this only happens if statement is successful
             # handle.set_trace_callback(print)
