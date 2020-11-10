@@ -96,7 +96,7 @@ class SQLiteConnectionManager(SQLConnectionManager):
             raise FailedToConnectException(str(e))
         except Exception as e:
             print(f"Unknown error opening SQLite connection: {e}")
-            raise str(e)
+            raise e
 
     @classmethod
     def get_status(cls, cursor: sqlite3.Cursor):
