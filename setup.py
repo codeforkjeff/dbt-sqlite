@@ -18,10 +18,21 @@ setup(
     package_data={
         'dbt': [
             'include/sqlite/macros/*.sql',
+            'include/sqlite/macros/**/*.sql',
+            'include/sqlite/macros/**/**/*.sql',
             'include/sqlite/dbt_project.yml',
         ]
     },
     install_requires=[
-        "dbt-core>=0.18.0",
+        "dbt-core~=0.18.0",
+    ],
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+
+        'License :: OSI Approved :: Apache Software License',
+
+        'Operating System :: Microsoft :: Windows',
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: POSIX :: Linux'
     ]
 )
