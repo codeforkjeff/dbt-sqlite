@@ -36,7 +36,7 @@ dbt_sqlite:
       # directory where all *.db files are attached as schema, using base filename 
       # as schema name, and where new schema are created. this can overlap with the dirs of
       # files in schemas_and_paths as long as there's no conflicts.
-      schema_directory: '/myproject/data'
+      schema_directory: '/my_project/data'
 
       # optional: semi-colon separated list of file paths for SQLite extensions to load.
       # digest.so is needed to provide for snapshots to work; see README
@@ -73,7 +73,7 @@ and schemas.)
   `materialized='table'` in models that reference other schemas.
 
 - Materializations are simplified: they drop and re-create the model, instead of
-doing the backup-and-swap-in new mode that the other dbt database adapters
+doing the backup-and-swap-in new model that the other dbt database adapters
 support. This choice was made because SQLite doesn't support `DROP ... CASCADE`
 or `ALTER VIEW` or provide information about relation dependencies in something
 information_schema-like. These limitations make it really difficult to make the
