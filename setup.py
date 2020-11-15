@@ -24,6 +24,7 @@ setup(
             'macros/**/*.sql',
             'macros/**/**/*.sql',
             'dbt_project.yml',
+            'sample_profiles.yml',
         ]
     },
     install_requires=[
