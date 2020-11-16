@@ -3,54 +3,20 @@ default:
 
     dev:
       type: sqlite
-
-      # sqlite locks the whole db on writes so anything > 1 won't help
       threads: 1
-
-      database: [database name]
-
-      # value of 'schema' must be defined in `schemas_and_paths` below. in most cases,
-      # this should be 'main'
+      database: <database name>
       schema: 'main'
-
-      # connect schemas to paths: at least one of these must be 'main'
-      # semi-colon separated list of file paths
-      # format: 'schema_1=/my_project/data/file_1.db;schema_2=/my_project/data/file_2.db'
       schemas_and_paths: 'main=/my_project/data/etl.db'
-
-      # directory where all *.db files are attached as schemata, using base filename
-      # as schema name, and where new schemata are created. this can overlap with the dirs of
-      # files in `schemas_and_paths` as long as there's no conflicts.
       schema_directory: '/my_project/data'
-
-      # optional: semi-colon separated list of file paths for SQLite extensions to load.
-      # digest.so is needed to provide for snapshots to work; see README
       extensions: '/path/to/sqlite-digest/digest.so'
 
     prod:
       type: sqlite
-
-      # sqlite locks the whole db on writes so anything > 1 won't help
       threads: 1
-
-      database: [database name]
-
-      # value of 'schema' must be defined in `schemas_and_paths` below. in most cases,
-      # this should be 'main'
+      database: <database name>
       schema: 'main'
-
-      # connect schemas to paths: at least one of these must be 'main'
-      # semi-colon separated list of file paths
-      # format: 'schema_1=/my_project/data/file_1.db;schema_2=/my_project/data/file_2.db'
       schemas_and_paths: 'main=/my_project/data/etl.db'
-
-      # directory where all *.db files are attached as schemata, using base filename
-      # as schema name, and where new schemata are created. this can overlap with the dirs of
-      # files in `schemas_and_paths` as long as there's no conflicts.
       schema_directory: '/my_project/data'
-
-      # optional: semi-colon separated list of file paths for SQLite extensions to load.
-      # digest.so is needed to provide for snapshots to work; see README
       extensions: '/path/to/sqlite-digest/digest.so'
 
   target: dev
