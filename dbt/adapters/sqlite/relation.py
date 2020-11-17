@@ -7,7 +7,7 @@ from dbt.adapters.base.relation import BaseRelation, Policy
 class SQLiteQuotePolicy(Policy):
     database: bool = False
     schema: bool = False
-    identifier: bool = False
+    identifier: bool = True
 
 
 @dataclass
