@@ -58,9 +58,11 @@ class SQLiteConnectionManager(SQLConnectionManager):
             else:
                 raise FailedToConnectException("at least one schema must be called 'main'")
 
-            handle.enable_load_extension(True)
-
             extensions = [e for e in (connection.credentials.extensions or "").split(";") if e]
+
+            if len(extensions) > 0:
+                handle.enable_load_extension(True)
+
             for ext_path in extensions:
                 handle.load_extension(ext_path)
             
