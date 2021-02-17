@@ -8,7 +8,20 @@ use at your own risk. Issues and PRs welcome!
 
 ## How to Use This
 
-Install this package: `pip install dbt-sqlite`
+Use the right version:
+
+- versions 0.1.x of this adapter work with dbt 0.19.x
+- versions 0.0.x of this adapter work with dbt 0.18.x
+
+Install this package:
+
+```
+# run this to install the latest version
+pip install dbt-sqlite
+
+# OR run this to install a specific version
+pip install dbt-sqlite==0.0.4
+```
 
 Create an entry in your `~/.dbt/profiles.yml` file with the following configuration:
 
