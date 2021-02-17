@@ -9,6 +9,7 @@ from typing import Optional, Tuple, Any
 
 from dbt.adapters.base import Credentials
 from dbt.adapters.sql import SQLConnectionManager
+from dbt.contracts.connection import AdapterResponse
 from dbt.contracts.connection import Connection
 from dbt.exceptions import (
     DatabaseException,
@@ -113,6 +114,19 @@ class SQLiteConnectionManager(SQLConnectionManager):
     @classmethod
     def get_status(cls, cursor: sqlite3.Cursor):
         return f"OK"#  {cursor.rowcount}"
+
+
+    def get_response(cls, cursor) -> AdapterResponse:
+        """
+        new to support dbt 0.19: this method replaces get_response
+        """
+        message = 'OK'
+        rows = cursor.rowcount
+        return AdapterResponse(
+            _message=message,
+            rows_affected=rows
+        )
+
 
     def cancel(self, connection):
         """ cancel ongoing queries """
