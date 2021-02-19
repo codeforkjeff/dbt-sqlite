@@ -6,6 +6,24 @@ A [SQLite](https://sqlite.org) adapter plugin for dbt (data build tool)
 This is an experimental plugin. Please read these docs carefully and
 use at your own risk. Issues and PRs welcome!
 
+## The Use Case
+
+SQLite is an embedded SQL database. It can be a good choice if
+your project meets some or all of these criteria:
+
+- the database file lives on fast, local storage (not on a network drive)
+- the amount of data is relatively small (GBs, not TBs)
+- you're a data team of one with no need to share access to the database
+- you mainly care about the final results of your pipelines, which are just
+a few models that you export into other systems for multi-user access
+or into BI/viz tools for analysis
+- your project is a proof of concept, to eventually be moved into
+another database or data warehouse platform
+
+SQLite can be surprisingly fast, despite the query optimizer not being as
+sophisticated as other databases and data warehouse platforms. Tip: realize
+your models as tables and create helpful indexes in post-hooks to speed up joins.
+
 ## How to Use This
 
 Use the right version:
@@ -46,7 +64,7 @@ dbt_sqlite:
       # connect schemas to paths: at least one of these must be 'main'
       schemas_and_paths: 'main=/my_project/data/etl.db;dataset=/my_project/data/dataset_v1.db'
 
-      # directory where all *.db files are attached as schema, using base filename 
+      # directory where all *.db files are attached as schema, using base filename
       # as schema name, and where new schema are created. this can overlap with the dirs of
       # files in schemas_and_paths as long as there's no conflicts.
       schema_directory: '/my_project/data'
