@@ -11,9 +11,10 @@ use at your own risk. Issues and PRs welcome!
 SQLite is an embedded SQL database. It can be a good choice if
 your project meets some or all of these criteria:
 
-- the database file lives on fast, local storage (not on a network drive)
+- you can store the database file on fast, local storage
+(not on a network drive)
 - the amount of data is relatively small (GBs, not TBs)
-- you're a data team of one with no need to share access to the database
+- you're a data team of one with no need to share access to a database
 - you mainly care about the final results of your pipelines, which are just
 a few models that you export into other systems for multi-user access
 or into BI/viz tools for analysis
@@ -22,7 +23,8 @@ another database or data warehouse platform
 
 SQLite can be surprisingly fast, despite the query optimizer not being as
 sophisticated as other databases and data warehouse platforms. Tip: realize
-your models as tables and create helpful indexes in post-hooks to speed up joins.
+your models as tables and create indexes in post-hooks to speed up filtering
+and joins.
 
 ## How to Use This
 
