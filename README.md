@@ -21,7 +21,7 @@ you're doing ETL vs ELT)
 - your project is a proof of concept, to eventually be moved into
 another database or data warehouse platform
 - you want an easily accessible, open source method of building your data
-project that others can use without the overhead/cost of a full RDBMS
+project that others can also deploy without the overhead/cost of a full RDBMS
 or data warehouse platform account (SQLite is included with python)
 
 SQLite can be surprisingly fast, despite the query optimizer not being as
