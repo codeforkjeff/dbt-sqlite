@@ -15,14 +15,14 @@ your project meets some or all of these criteria:
 (not on a network drive)
 - the amount of data is relatively small (GBs, not TBs)
 - you're a data team of one with no need to share access to a database
-- you mainly care about the final results of your pipelines, which are
-exported into other systems for multi-user access or into BI/viz tools
-for analysis
+- your end goal is to export the results of your pipeline(s) into other
+systems for multi-user access or into BI/viz tools for analysis (i.e.
+you're doing ETL vs ELT)
 - your project is a proof of concept, to eventually be moved into
 another database or data warehouse platform
 - you want an easily accessible, open source method of building your data
 project that others can use without the overhead/cost of a full RDBMS
-or data warehouse platform account
+or data warehouse platform account (SQLite is included with python)
 
 SQLite can be surprisingly fast, despite the query optimizer not being as
 sophisticated as other databases and data warehouse platforms. Tip: realize
