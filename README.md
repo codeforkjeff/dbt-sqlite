@@ -11,7 +11,7 @@ use at your own risk. Issues and PRs welcome!
 SQLite is an embedded SQL database. It can be a good choice if
 your project meets some or all of these criteria:
 
-- you can store the database file on fast, local storage
+- you store the database file on fast, local storage
 (not on a network drive)
 - the amount of data is relatively small (GBs, not TBs)
 - you're a data team of one with no need to share access to a database
@@ -20,9 +20,9 @@ systems for multi-user access or into BI/viz tools for analysis (i.e.
 you're doing ETL vs ELT)
 - your project is a proof of concept, to eventually be moved into
 another database or data warehouse platform
-- you want an easily accessible, open source method of building your data
-project that others can also deploy without the overhead/cost of a full RDBMS
-or data warehouse platform account (SQLite is included with python)
+- you want others to be able to deploy your data build without the
+overhead/cost of a full RDBMS or signing up for a data warehouse platform
+(SQLite is included with python and requires no installation)
 
 SQLite can be surprisingly fast, despite the query optimizer not being as
 sophisticated as other databases and data warehouse platforms. Tip: realize
