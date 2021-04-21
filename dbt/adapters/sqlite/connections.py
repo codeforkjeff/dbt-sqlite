@@ -25,7 +25,7 @@ class SQLiteCredentials(Credentials):
 
     schemas_and_paths: str
     schema_directory: str
-    extensions: Optional[str]
+    extensions: Optional[str] = None
 
     @property
     def type(self):
