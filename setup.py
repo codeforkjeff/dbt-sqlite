@@ -3,14 +3,15 @@ from setuptools import find_packages
 from setuptools import setup
 
 package_name = "dbt-sqlite"
-package_version = "0.1.0"
+package_version = "0.1.1"
 description = """A SQLite adapter plugin for dbt (data build tool)"""
+long_description = "Please see the github repository for detailed information"
 
 setup(
     name=package_name,
     version=package_version,
     description=description,
-    long_description=description,
+    long_description=long_description,
     author='Jeff Chiu',
     author_email='jeff@codefork.com',
     url='https://github.com/codeforkjeff/dbt-sqlite',
