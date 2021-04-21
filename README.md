@@ -147,6 +147,36 @@ or find a python distribution for Mac OS with this support.
 
 ...
 
+### Publishing a release to PyPI
+
+Because I forget...
+
+```
+# assumes ~/.pypirc is already set up
+
+workon dbt-sqlite-devel
+
+vi setup.py # update version
+
+# start clean
+rm -rf dist/ build/ *.egg-info
+
+# make sure tools are up to date
+python -m pip install --upgrade setuptools wheel twine
+
+# build
+python setup.py sdist bdist_wheel
+
+# upload to PyPI
+python -m twine upload dist/*
+
+git commit
+git tag vXXX
+git push --tags
+
+# go to github and "Draft a new release"
+```
+
 ## Running Tests
 
 Install the `pytest-dbt-adapter` package and run the test specs in this repository:
