@@ -75,8 +75,8 @@ dbt_sqlite:
       schema_directory: '/my_project/data'
 
       # optional: semi-colon separated list of file paths for SQLite extensions to load.
-      # digest.so is needed to provide for snapshots to work; see README
-      extensions: "/path/to/sqlite-digest/digest.so"
+      # crypto.so is needed to provide for snapshots to work; see README
+      extensions: "/path/to/sqlean/crypto.so"
 
 ```
 
@@ -120,23 +120,16 @@ not worth the effort.
 - This has been developed on Ubuntu 20.04, Python 3.8.5 (with sqlite 3.31.1),
 dbt 0.18.1. It's largely untested elsewhere.
 
-## Building the digest extension for SQLite
+## SQLite Extensions
 
-For snapshots to work, you need to build the `digest` extension to get an `md5()`
-function. On Ubuntu, run:
+For snapshots to work, you'll need the `crypto` module from SQLean to get an `md5()`
+function. It's recommended that you install all the SQLean modules, as they provide
+many common SQL functions missing from SQLite.
 
-```
-git clone https://github.com/mpdn/sqlite-digest
+Precompiled binaries from the [SQLean github repository](https://github.com/nalgeon/sqlean)
+are available for download. You can also compile them yourself if you want.
 
-cd sqlite-digest
-
-sudo apt install gcc libssl-dev libsqlite3-dev
-
-make
-```
-
-This will create `digest.so`. Point to it in your profile config as shown in the
-example above.
+Point to these module files in your profile config as shown in the example above.
 
 Mac OS seems to ship with [SQLite libraries that do not have support for loading extensions compiled in](https://docs.python.org/3/library/sqlite3.html#f1),
 so this won't work "out of the box." Accordingly, snapshots won't work.
