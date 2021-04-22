@@ -126,8 +126,8 @@ For snapshots to work, you'll need the `crypto` module from SQLean to get an `md
 function. It's recommended that you install all the SQLean modules, as they provide
 many common SQL functions missing from SQLite.
 
-Precompiled binaries from the [SQLean github repository](https://github.com/nalgeon/sqlean)
-are available for download. You can also compile them yourself if you want.
+Precompiled binaries are available for download from the [SQLean github repository page](https://github.com/nalgeon/sqlean).
+You can also compile them yourself if you want.
 
 Point to these module files in your profile config as shown in the example above.
 
