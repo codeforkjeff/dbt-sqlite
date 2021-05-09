@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import glob
 import os.path
 import sqlite3
-from typing import Optional, Tuple, Any
+from typing import Optional, Tuple, Any, Dict
 
 
 from dbt.adapters.base import Credentials
@@ -23,7 +23,7 @@ from dbt.logger import GLOBAL_LOGGER as logger
 class SQLiteCredentials(Credentials):
     """ Required connections for a SQLite connection"""
 
-    schemas_and_paths: str
+    schemas_and_paths: Dict[str, str]
     schema_directory: str
     extensions: Optional[str] = None
 
@@ -48,8 +48,7 @@ class SQLiteConnectionManager(SQLConnectionManager):
         credentials = connection.credentials
 
         schemas_and_paths = {}
-        for path_entry in credentials.schemas_and_paths.split(";"):
-            schema, path = path_entry.split("=", 1)
+        for schema, path in credentials.schemas_and_paths.items():
             # store abs path so we can tell if we've attached the file already
             schemas_and_paths[schema] = os.path.abspath(path)
 

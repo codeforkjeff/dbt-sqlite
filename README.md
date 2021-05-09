@@ -67,7 +67,9 @@ dbt_sqlite:
       schema: 'main'
 
       # connect schemas to paths: at least one of these must be 'main'
-      schemas_and_paths: 'main=/my_project/data/etl.db;dataset=/my_project/data/dataset_v1.db'
+      schemas_and_paths:
+        main: '/my_project/data/etl.db'
+        dataset: '/my_project/data/dataset_v1.db'
 
       # directory where all *.db files are attached as schema, using base filename
       # as schema name, and where new schema are created. this can overlap with the dirs of
