@@ -78,7 +78,8 @@ dbt_sqlite:
 
       # optional: semi-colon separated list of file paths for SQLite extensions to load.
       # crypto.so is needed to provide for snapshots to work; see README
-      extensions: "/path/to/sqlean/crypto.so"
+      extensions:
+        - "/path/to/sqlean/crypto.so"
 
 ```
 

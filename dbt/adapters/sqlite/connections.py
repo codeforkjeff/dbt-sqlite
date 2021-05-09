@@ -1,10 +1,10 @@
 
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import glob
 import os.path
 import sqlite3
-from typing import Optional, Tuple, Any, Dict
+from typing import Optional, Tuple, Any, Dict, List
 
 
 from dbt.adapters.base import Credentials
@@ -25,7 +25,7 @@ class SQLiteCredentials(Credentials):
 
     schemas_and_paths: Dict[str, str]
     schema_directory: str
-    extensions: Optional[str] = None
+    extensions: List[str] = field(default_factory=list)
 
     @property
     def type(self):
@@ -40,16 +40,16 @@ class SQLiteConnectionManager(SQLConnectionManager):
     TYPE = "sqlite"
 
     @classmethod
-    def open(cls, connection):
+    def open(cls, connection: Connection):
         if connection.state == "open":
             logger.debug("Connection is already open, skipping open.")
             return connection
 
-        credentials = connection.credentials
+        credentials: SQLiteCredentials = connection.credentials
 
         schemas_and_paths = {}
         for schema, path in credentials.schemas_and_paths.items():
-            # store abs path so we can tell if we've attached the file already
+            # Make .db file path absolute
             schemas_and_paths[schema] = os.path.abspath(path)
 
         try:
@@ -58,12 +58,10 @@ class SQLiteConnectionManager(SQLConnectionManager):
             else:
                 raise FailedToConnectException("at least one schema must be called 'main'")
 
-            extensions = [e for e in (connection.credentials.extensions or "").split(";") if e]
-
-            if len(extensions) > 0:
+            if len(credentials.extensions) > 0:
                 handle.enable_load_extension(True)
 
-            for ext_path in extensions:
+            for ext_path in credentials.extensions:
                 handle.load_extension(ext_path)
             
             cursor = handle.cursor()
