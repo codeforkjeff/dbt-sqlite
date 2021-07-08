@@ -175,14 +175,25 @@ git push --tags
 
 ## Running Tests
 
-Install the `pytest-dbt-adapter` package and run the test specs in this repository:
+On Windows, you'll need to make adjustments to the commands below.
 
 ```
-pip install pytest-dbt-adapter
+workon dbt-sqlite-test
+
+pip install dbt==0.19.2
+
+# install adapter test suite
+# version 0.5.0 doesn't work with dbt 0.19.x
+# see https://github.com/dbt-labs/dbt-adapter-tests/issues/20
+pip install pytest-dbt-adapter==0.4.0
+
+# install dbt-sqlite in development mode
+pip install -e .
 
 # this path needs to exist for tests to write database file
 mkdir -p /tmp/dbt-sqlite-tests
 
+# adjust paths in test/sqlite.dbtspec before running this
 pytest test/sqlite.dbtspec
 ```
 
