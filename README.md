@@ -25,7 +25,7 @@ overhead/cost of a full RDBMS or signing up for a data warehouse platform
 (SQLite is included with python and requires no installation)
 
 SQLite can be surprisingly fast, despite the query optimizer not being as
-sophisticated as other databases and data warehouse platforms. Tip: realize
+sophisticated as other databases and data warehouse platforms. Tip: materialize
 your models as tables and create indexes in post-hooks to speed up filtering
 and joins.
 
@@ -77,7 +77,7 @@ dbt_sqlite:
       schema_directory: '/my_project/data'
 
       # optional: semi-colon separated list of file paths for SQLite extensions to load.
-      # crypto.so is needed to provide for snapshots to work; see README
+      # crypto.so is needed for snapshots to work; see README
       extensions:
         - "/path/to/sqlean/crypto.so"
 
@@ -119,9 +119,6 @@ information_schema-like. These limitations make it really difficult to make the
 backup-and-swap-in functionality work properly. Given how SQLite aggressively
 [locks](https://sqlite.org/lockingv3.html) the database anyway, it's probably
 not worth the effort.
-
-- This has been developed on Ubuntu 20.04, Python 3.8.5 (with sqlite 3.31.1),
-dbt 0.18.1. It's largely untested elsewhere.
 
 ## SQLite Extensions
 
