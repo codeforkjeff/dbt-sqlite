@@ -6,17 +6,21 @@ default:
       threads: 1
       database: <database name>
       schema: 'main'
-      schemas_and_paths: 'main=/my_project/data/etl.db'
+      schemas_and_paths:
+        main: '/my_project/data/etl.db'
       schema_directory: '/my_project/data'
-      extensions: '/path/to/sqlite-digest/digest.so'
+      extensions:
+        - '/path/to/sqlite-digest/digest.so'
 
     prod:
       type: sqlite
       threads: 1
       database: <database name>
       schema: 'main'
-      schemas_and_paths: 'main=/my_project/data/etl.db'
+      schemas_and_paths:
+        main: '/my_project/data/etl.db'
       schema_directory: '/my_project/data'
-      extensions: '/path/to/sqlite-digest/digest.so'
+      extensions:
+        - '/path/to/sqlite-digest/digest.so'
 
   target: dev
