@@ -7,7 +7,7 @@ target:
     main: '/tmp/dbt-sqlite-tests/adapter_test.db'
   schema_directory: '/tmp/dbt-sqlite-tests'
   extensions:
-    - "/tmp/dbt-sqlite-tests/digest.so"
+    - "/tmp/dbt-sqlite-tests/crypto.so"
   threads: 1
 sequences:
   test_dbt_empty: empty
