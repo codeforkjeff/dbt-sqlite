@@ -1,15 +1,16 @@
 
 # dbt-sqlite
 
-A [SQLite](https://sqlite.org) adapter plugin for dbt (data build tool)
+A [SQLite](https://sqlite.org) adapter plugin for [dbt](https://www.getdbt.com/) (data build tool)
 
 This is an experimental plugin. Please read these docs carefully and
 use at your own risk. Issues and PRs welcome!
 
 ## The Use Case
 
-SQLite is an embedded SQL database. It can be a good choice if
-your project meets some or all of these criteria:
+SQLite is an embedded SQL database. It comes included with most Python
+distributions and requires no installation or configuration. It can be
+a good choice if your project meets some or all of these criteria:
 
 - you store the database file on fast, local storage
 (not on a network drive)
@@ -22,7 +23,6 @@ you're doing ETL vs ELT)
 another database or data warehouse platform
 - you want others to be able to deploy your data build without the
 overhead/cost of a full RDBMS or signing up for a data warehouse platform
-(SQLite is included with python and requires no installation)
 
 SQLite can be surprisingly fast, despite the query optimizer not being as
 sophisticated as other databases and data warehouse platforms. Tip: materialize
