@@ -29,7 +29,7 @@ setup(
         ]
     },
     install_requires=[
-        "dbt-core~=0.19.0",
+        "dbt-core~=0.20.0",
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',
