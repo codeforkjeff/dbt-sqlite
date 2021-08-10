@@ -65,19 +65,6 @@ class SQLiteAdapter(SQLAdapter):
                 f"I don't know how to rename this type of relation: {from_relation.type}," +
                 f" from: {from_relation}, to: {to_relation}")
 
-    def list_schemas(self, database: str) -> List[str]:
-        """
-        Schemas in SQLite are attached databases
-        """
-        results = self.connections.execute("PRAGMA database_list", fetch=True)
-        
-        schemas = [row[1] for row in results[1]]
-
-        return schemas
-
-    def check_schema_exists(self, database: str, schema: str) -> bool:
-        return schema in self.list_schemas(database)
-
     def get_columns_in_relation(self, relation):
         _, results = self.connections.execute(f"pragma {relation.schema}.table_info({relation.identifier})", fetch=True)
 

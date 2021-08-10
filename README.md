@@ -33,6 +33,7 @@ and joins.
 
 Use the right version:
 
+- versions 0.2.x of this adapter work with dbt 0.20.x
 - versions 0.1.x of this adapter work with dbt 0.19.x
 - versions 0.0.x of this adapter work with dbt 0.18.x
 
@@ -177,12 +178,12 @@ On Windows, you'll need to make adjustments to the commands below.
 ```
 workon dbt-sqlite-test
 
-pip install dbt==0.19.2
+pip install dbt==0.20.0
 
 # install adapter test suite
-# version 0.5.0 doesn't work with dbt 0.19.x
+# NOTE: dbt 0.19.x doesn't work with >= 0.5.0; use 0.4.0
 # see https://github.com/dbt-labs/dbt-adapter-tests/issues/20
-pip install pytest-dbt-adapter==0.4.0
+pip install pytest-dbt-adapter==0.5.1
 
 # install dbt-sqlite in development mode
 pip install -e .
