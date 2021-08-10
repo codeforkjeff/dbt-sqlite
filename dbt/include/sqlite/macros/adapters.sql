@@ -1,6 +1,9 @@
 {% macro sqlite__list_schemas(database) %}
-    {# no-op #}
-    {# see SQLiteAdapter.list_schemas() #}
+    {% call statement('list_schemas', fetch_result=True) %}
+        pragma database_list
+    {% endcall %}
+    {% set results = load_result('list_schemas').table %}
+    {{ return(results.select(['name']).rename(column_names = {'name': 'schema'})) }}
 {% endmacro %}
 
 {% macro sqlite__create_schema(relation, auto_begin=False) %}
@@ -34,25 +37,45 @@
     {%- endcall %}
 {% endmacro %}
 
-{% macro sqlite__check_schema_exists(database, schema) -%}
-    {# no-op #}
-    {# see SQLiteAdapter.check_schema_exists() #}
+{% macro sqlite__check_schema_exists(information_schema, schema) -%}
+    {% if schema in list_schemas(database).columns[0].values() %}
+        {% call statement('check_schema_exists', fetch_result=True) %}
+            SELECT 1 as schema_exist
+        {% endcall %}
+        {{ return(load_result('check_schema_exists').table) }}
+    {% else %}
+        {% call statement('check_schema_exists', fetch_result=True) %}
+            SELECT 0 as schema_exist
+        {% endcall %}
+        {{ return(load_result('check_schema_exists').table) }}
+    {% endif %}
 {% endmacro %}
 
 {% macro sqlite__list_relations_without_caching(schema_relation) %}
-    {% call statement('list_relations_without_caching', fetch_result=True) %}
-        SELECT 
-            '{{ schema_relation.database }}' as database
-            ,name
-            ,'{{ schema_relation.schema }}' AS schema
-            ,type as data_type
-        FROM 
-            {{ schema_relation.schema }}.sqlite_master
-        WHERE
-            name NOT LIKE 'sqlite_%'
-    {% endcall %}
 
-    {{ return(load_result('list_relations_without_caching').table) }}
+    {% set schemas = list_schemas(schema_relation.database).columns[0].values() %}
+
+    {% if schema_relation.schema in schemas %}
+        {% call statement('list_relations_without_caching', fetch_result=True) %}
+            SELECT
+                '{{ schema_relation.database }}' as database
+                ,name
+                ,'{{ schema_relation.schema }}' AS schema
+                ,type as data_type
+            FROM
+                {{ schema_relation.schema }}.sqlite_master
+            WHERE
+                name NOT LIKE 'sqlite_%'
+        {% endcall %}
+
+        {{ return(load_result('list_relations_without_caching').table) }}
+    {% else %}
+        {% call statement('empty_table', fetch_result=True) %}
+            SELECT null as database, null as name, null as schema, null as data_type WHERE 1=0
+        {% endcall %}
+
+        {{ return(load_result('empty_table').table) }}
+    {% endif %}
 {% endmacro %}
 
 {% macro sqlite__create_table_as(temporary, relation, sql) -%}
