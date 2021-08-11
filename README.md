@@ -10,7 +10,7 @@ use at your own risk. Issues and PRs welcome!
 
 SQLite is an embedded SQL database. It comes included with most Python
 distributions and requires no installation or configuration. It can be
-a good choice if your project meets some or all of these criteria:
+a good choice if your project meets any of these criteria:
 
 - you store the database file on fast, local storage
 (not on a network drive)
@@ -77,7 +77,7 @@ dbt_sqlite:
       # files in schemas_and_paths as long as there's no conflicts.
       schema_directory: '/my_project/data'
 
-      # optional: semi-colon separated list of file paths for SQLite extensions to load.
+      # optional: list of file paths of SQLite extensions to load.
       # crypto.so is needed for snapshots to work; see README
       extensions:
         - "/path/to/sqlean/crypto.so"
