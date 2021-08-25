@@ -114,42 +114,31 @@ class SQLiteAdapter(SQLAdapter):
 
         rows = []
         for schema in schemas:
-            # TODO: violates DRY but I couldn't figure out how to get
-            # a BaseRelation object to pass into
-            # list_relations_without_caching()
-            sql = f"""SELECT
-                '{ information_schema.database }' as database
-                ,name
-                ,'{ schema }' AS schema
-                ,type as data_type
-            FROM
-                { schema }.sqlite_master
-            WHERE
-                name NOT LIKE 'sqlite_%'
-            """
 
-            results = self.connections.execute(sql, fetch=True)
+            schema_obj = self.Relation.create(database=information_schema.database, schema=schema)
+            results = self.list_relations_without_caching(schema_obj)
 
-            for relation_row in results[1]:
-                name = relation_row['name']
-                relation_type = relation_row['data_type']
+            if len(results) > 0:
+                for relation_row in results:
+                    name = relation_row.name
+                    relation_type = str(relation_row.type)
 
-                table_info = self.connections.execute(
-                    f"pragma {schema}.table_info({name})", fetch=True)
+                    table_info = self.connections.execute(
+                        f"pragma {schema}.table_info({name})", fetch=True)
 
-                for table_row in table_info[1]:
-                    rows.append([
-                        information_schema.database,
-                        schema,
-                        name,
-                        relation_type,
-                        '',
-                        '',
-                        table_row['name'],
-                        table_row['cid'],
-                        table_row['type'] or 'TEXT',
-                        ''
-                    ])
+                    for table_row in table_info[1]:
+                        rows.append([
+                            information_schema.database,
+                            schema,
+                            name,
+                            relation_type,
+                            '',
+                            '',
+                            table_row['name'],
+                            table_row['cid'],
+                            table_row['type'] or 'TEXT',
+                            ''
+                        ])
 
         column_names = [
             'table_database',
