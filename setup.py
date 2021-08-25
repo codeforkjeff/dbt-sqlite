@@ -3,7 +3,7 @@ from setuptools import find_packages
 from setuptools import setup
 
 package_name = "dbt-sqlite"
-package_version = "0.2.0"
+package_version = "0.2.1"
 description = """A SQLite adapter plugin for dbt (data build tool)"""
 long_description = "Please see the github repository for detailed information"
 
@@ -32,7 +32,7 @@ setup(
         "dbt-core~=0.20.0",
     ],
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
 
         'License :: OSI Approved :: Apache Software License',
 
