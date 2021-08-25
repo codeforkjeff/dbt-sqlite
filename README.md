@@ -193,6 +193,8 @@ mkdir -p /tmp/dbt-sqlite-tests
 
 # adjust paths in test/sqlite.dbtspec before running this
 pytest test/sqlite.dbtspec
+
+# remember to test 'dbt docs generate': this isn't covered in test suite
 ```
 
 Remember to delete the database file referenced in `test/sqlite.dbtspec`
