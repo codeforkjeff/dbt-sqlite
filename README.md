@@ -3,8 +3,7 @@
 
 A [SQLite](https://sqlite.org) adapter plugin for [dbt](https://www.getdbt.com/) (data build tool)
 
-This is an experimental plugin. Please read these docs carefully and
-use at your own risk. Issues and PRs welcome!
+Please read these docs carefully and use at your own risk. Issues and PRs welcome!
 
 ## The Use Case
 
