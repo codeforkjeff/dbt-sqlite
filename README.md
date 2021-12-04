@@ -173,32 +173,9 @@ git push --tags
 
 ## Running Tests
 
-On Windows, you'll need to make adjustments to the commands below.
-
 ```
-workon dbt-sqlite-test
-
-pip install dbt==0.20.0
-
-# install adapter test suite
-# NOTE: dbt 0.19.x doesn't work with >= 0.5.0; use 0.4.0
-# see https://github.com/dbt-labs/dbt-adapter-tests/issues/20
-pip install pytest-dbt-adapter==0.5.1
-
-# install dbt-sqlite in development mode
-pip install -e .
-
-# this path needs to exist for tests to write database file
-mkdir -p /tmp/dbt-sqlite-tests
-
-# adjust paths in test/sqlite.dbtspec before running this
-pytest test/sqlite.dbtspec
-
-# remember to test 'dbt docs generate': this isn't covered in test suite
+./run_tests_docker.sh
 ```
-
-Remember to delete the database file referenced in `test/sqlite.dbtspec`
-between runs of pytest, otherwise leftover state from failures can mess up subsequent test runs.
 
 ## Credits
 
