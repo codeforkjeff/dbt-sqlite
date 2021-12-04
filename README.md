@@ -33,7 +33,7 @@ and joins.
 
 Use the right version:
 
-- versions 0.2.x of this adapter work with dbt 0.20.x
+- versions 0.2.x of this adapter work with dbt 0.20.x and 0.21.x
 - versions 0.1.x of this adapter work with dbt 0.19.x
 - versions 0.0.x of this adapter work with dbt 0.18.x
 
