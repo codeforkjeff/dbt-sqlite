@@ -20,4 +20,9 @@ RUN pip install dbt==0.21.1
 # I think it's intended for the forthcoming 1.0.0 dbt release?
 RUN pip install pytest-dbt-adapter==0.5.1
 
+# dbt-sqlite overrides some stuff pertaining to 'docs generate'
+# so exercise it using jaffle_shop repo
+
+RUN cd /root && git clone https://github.com/dbt-labs/jaffle_shop.git
+
 ENTRYPOINT ["./run_tests.sh"]

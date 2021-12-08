@@ -12,11 +12,11 @@ pytest test/sqlite.dbtspec
 # dbt-sqlite overrides some stuff pertaining to 'docs generate'
 # so exercise it using jaffle_shop repo
 
-cd /tmp
+cd /root/jaffle_shop
 
-git clone https://github.com/dbt-labs/jaffle_shop.git
+git pull
 
-cd /tmp/jaffle_shop
+mkdir -p /tmp/jaffle_shop
 
 mkdir -p /root/.dbt
 
