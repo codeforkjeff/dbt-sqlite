@@ -30,8 +30,11 @@ and joins.
 
 ## How to Use This
 
-Use the right version:
+Use the right version. Starting with the release of dbt-core 1.0.0,
+versions of dbt-sqlite are aligned to the same major+minor
+[version](https://semver.org/) of dbt-core.
 
+- versions 1.0.x of this adapter work with dbt-core 1.0.x
 - versions 0.2.x of this adapter work with dbt 0.20.x and 0.21.x
 - versions 0.1.x of this adapter work with dbt 0.19.x
 - versions 0.0.x of this adapter work with dbt 0.18.x

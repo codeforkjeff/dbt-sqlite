@@ -11,14 +11,14 @@ RUN mkdir -p /tmp/dbt-sqlite-tests
 
 RUN cd /tmp/dbt-sqlite-tests && wget https://github.com/nalgeon/sqlean/releases/download/0.12.2/crypto.so
 
-RUN pip install dbt==0.21.1
+RUN pip install dbt-core~=1.0.0
 
 # NOTE: dbt 0.19.x doesn't work with pytest-dbt-adapter >= 0.5.0; use 0.4.0
 # see https://github.com/dbt-labs/dbt-adapter-tests/issues/20
 #
 # pytest-dbt-adapter 0.6.0 doesn't seem to work with dbt 0.21.1,
 # I think it's intended for the forthcoming 1.0.0 dbt release?
-RUN pip install pytest-dbt-adapter==0.5.1
+RUN pip install pytest-dbt-adapter==0.6.0
 
 # dbt-sqlite overrides some stuff pertaining to 'docs generate'
 # so exercise it using jaffle_shop repo

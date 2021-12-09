@@ -63,7 +63,7 @@ setup(
         ]
     },
     install_requires=[
-        "dbt-core>=0.20.0"
+        "dbt-core>=1.0.0"
     ],
     classifiers=[
         'Development Status :: 4 - Beta',
