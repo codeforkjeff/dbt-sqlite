@@ -31,6 +31,14 @@ class SQLiteCredentials(Credentials):
     def type(self):
         return "sqlite"
 
+    @property
+    def unique_field(self):
+        """
+        Hashed and included in anonymous telemetry to track adapter adoption.
+        Pick a field that can uniquely identify one team/organization building with this adapter
+        """
+        return self.host
+
     def _connection_keys(self):
         """ Keys to show when debugging """
         return ["database", "schema", "schemas_and_paths", "schema_directory" ]

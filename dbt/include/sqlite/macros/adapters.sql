@@ -116,3 +116,7 @@ that here when making the relation and everything else should Just Work
 
     {% do return(tmp_relation) %}
 {% endmacro %}
+
+{% macro sqlite__current_timestamp() -%}
+  datetime()
+{%- endmacro %}
