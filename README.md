@@ -46,7 +46,7 @@ Install this package:
 pip install dbt-sqlite
 
 # OR run this to install a specific version
-pip install dbt-sqlite==0.0.4
+pip install dbt-sqlite==1.0.0
 ```
 
 Create an entry in your `~/.dbt/profiles.yml` file with the following configuration:
