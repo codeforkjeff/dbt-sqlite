@@ -246,4 +246,6 @@ class SQLiteAdapter(SQLAdapter):
 
         # never detach main
         if relation.schema != 'main':
+            # FIXME: this breaks: causes "database is locked" error.
+            #if self.check_schema_exists(relation.database, relation.schema):
             self.connections.execute(f"DETACH DATABASE {relation.schema}")
