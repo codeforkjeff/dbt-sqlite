@@ -5,7 +5,7 @@ pip install -e .
 # Leaving the database file between runs of pytest can mess up subsequent test runs.
 # Since this runs in a fresh container each time, it's not an issue.
 
-pytest test/sqlite.dbtspec
+python3 -m pytest tests/functional
 
 ####
 
