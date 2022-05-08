@@ -153,6 +153,7 @@ Because I forget...
 workon dbt-sqlite-devel
 
 vi dbt/adapters/sqlite/__version__.py # update version
+vi setup.py # update dbt-core dependency if appropriate
 
 # start clean
 rm -rf dist/ build/ *.egg-info
