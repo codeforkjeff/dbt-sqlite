@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "HOME=$HOME"
+
 pip install -e .
 
 # Leaving the database file between runs of pytest can mess up subsequent test runs.
@@ -12,15 +14,27 @@ python3 -m pytest tests/functional
 # dbt-sqlite overrides some stuff pertaining to 'docs generate'
 # so exercise it using jaffle_shop repo
 
-cd /root/jaffle_shop
+# dbt-sqlite overrides some stuff pertaining to 'docs generate'
+# so exercise it using jaffle_shop repo
+
+cd $HOME
+
+git clone https://github.com/dbt-labs/jaffle_shop.git
+
+cd jaffle_shop
 
 git pull
 
 mkdir -p /tmp/jaffle_shop
 
-mkdir -p /root/.dbt
+mkdir -p $HOME/.dbt
 
-cat >> /root/.dbt/profiles.yml <<EOF
+if [ -f $HOME/.dbt/profiles.yml ]; then
+    echo "ERROR: profiles.yml already exists, refusing to overwrite it"
+    exit 1
+fi
+
+cat >> $HOME/.dbt/profiles.yml <<EOF
 
 jaffle_shop:
 
