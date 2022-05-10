@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "HOME=$HOME"
+
 pip install -e .
 
 # Leaving the database file between runs of pytest can mess up subsequent test runs.
