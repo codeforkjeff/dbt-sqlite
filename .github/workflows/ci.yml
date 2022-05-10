@@ -28,4 +28,4 @@ jobs:
           cd /tmp/dbt-sqlite-tests && wget https://github.com/nalgeon/sqlean/releases/download/0.12.2/crypto.so
       - name: Run test script
         run: |
-          . run_tests.sh
+          ./run_tests.sh
