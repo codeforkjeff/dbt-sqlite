@@ -30,7 +30,7 @@ mkdir -p /tmp/jaffle_shop
 mkdir -p $HOME/.dbt
 
 if [ -f $HOME/.dbt/profiles.yml ]; then
-    echo "profiles.yml already exists, refusing to overwrite it"
+    echo "ERROR: profiles.yml already exists, refusing to overwrite it"
     exit 1
 fi
 
