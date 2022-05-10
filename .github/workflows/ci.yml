@@ -20,7 +20,7 @@ jobs:
       - name: Install from requirements.txt
         run: |
           python -m pip install --upgrade pip
-          pip install pytest
+          pip install pytest pytest-dotenv dbt-tests-adapter==1.1.0
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Run test script
         run: |
