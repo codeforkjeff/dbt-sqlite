@@ -15,9 +15,4 @@ RUN pip install dbt-core~=1.1.0
 
 RUN pip install pytest pytest-dotenv dbt-tests-adapter==1.1.0
 
-# dbt-sqlite overrides some stuff pertaining to 'docs generate'
-# so exercise it using jaffle_shop repo
-
-RUN cd /root && git clone https://github.com/dbt-labs/jaffle_shop.git
-
 ENTRYPOINT ["./run_tests.sh"]

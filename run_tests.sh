@@ -12,6 +12,13 @@ python3 -m pytest tests/functional
 # dbt-sqlite overrides some stuff pertaining to 'docs generate'
 # so exercise it using jaffle_shop repo
 
+# dbt-sqlite overrides some stuff pertaining to 'docs generate'
+# so exercise it using jaffle_shop repo
+
+cd /root
+
+git clone https://github.com/dbt-labs/jaffle_shop.git
+
 cd /root/jaffle_shop
 
 git pull
