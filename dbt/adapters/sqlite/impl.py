@@ -244,10 +244,6 @@ class SQLiteAdapter(SQLAdapter):
     def drop_schema(self, relation: BaseRelation) -> None:
         super().drop_schema(relation)
 
-        # can't detach a database in the middle of a transaction, so commit first.
-        # I wonder if drop_schema() in SQLAdapter should do this, since create_schema() does.
-        self.commit_if_has_connection()
-
         # never detach main
         if relation.schema != 'main':
             if self.check_schema_exists(relation.database, relation.schema):
