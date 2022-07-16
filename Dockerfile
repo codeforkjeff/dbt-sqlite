@@ -11,8 +11,12 @@ RUN mkdir -p /tmp/dbt-sqlite-tests
 
 RUN cd /tmp/dbt-sqlite-tests && wget https://github.com/nalgeon/sqlean/releases/download/0.12.2/crypto.so
 
-RUN pip install dbt-core~=1.1.0
+RUN pip install dbt-core~=1.2.0rc1
 
-RUN pip install pytest pytest-dotenv dbt-tests-adapter==1.1.0
+RUN pip install pytest pytest-dotenv dbt-tests-adapter==1.2.0rc1
 
-ENTRYPOINT ["./run_tests.sh"]
+COPY . .
+
+RUN pip install -e .
+
+ENTRYPOINT ["/bin/bash"]

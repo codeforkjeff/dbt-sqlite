@@ -2,8 +2,6 @@
 
 echo "HOME=$HOME"
 
-pip install -e .
-
 # Leaving the database file between runs of pytest can mess up subsequent test runs.
 # Since this runs in a fresh container each time, it's not an issue.
 
@@ -19,7 +17,7 @@ python3 -m pytest tests/functional
 
 cd $HOME
 
-git clone https://github.com/dbt-labs/jaffle_shop.git
+git clone --depth 1 https://github.com/dbt-labs/jaffle_shop.git
 
 cd jaffle_shop
 
