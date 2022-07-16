@@ -61,8 +61,10 @@ class SQLiteConnectionManager(SQLConnectionManager):
             schemas_and_paths[schema] = os.path.abspath(path)
 
         try:
+            attached = []
             if 'main' in schemas_and_paths:
                 handle: sqlite3.Connection = sqlite3.connect(schemas_and_paths['main'])
+                attached.append(schemas_and_paths['main'])
             else:
                 raise FailedToConnectException("at least one schema must be called 'main'")
 
@@ -74,7 +76,6 @@ class SQLiteConnectionManager(SQLConnectionManager):
             
             cursor = handle.cursor()
 
-            attached = []
             for schema in set(schemas_and_paths.keys()) - set(['main']):
                 path = schemas_and_paths[schema]
                 cursor.execute(f"attach '{path}' as '{schema}'")
