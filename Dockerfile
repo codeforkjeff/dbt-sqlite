@@ -7,13 +7,9 @@ RUN mkdir /root/dbt-sqlite
 
 WORKDIR /root/dbt-sqlite
 
-RUN mkdir -p /tmp/dbt-sqlite-tests
+COPY bootstrap_test_env.sh .
 
-RUN cd /tmp/dbt-sqlite-tests && wget https://github.com/nalgeon/sqlean/releases/download/0.12.2/crypto.so
-
-RUN pip install dbt-core~=1.2.0rc1
-
-RUN pip install pytest pytest-dotenv dbt-tests-adapter==1.2.0rc1
+RUN ./bootstrap_test_env.sh
 
 COPY . .
 
