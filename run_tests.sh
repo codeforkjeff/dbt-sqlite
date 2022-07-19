@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 echo "HOME=$HOME"
 
 # Leaving the database file between runs of pytest can mess up subsequent test runs.
