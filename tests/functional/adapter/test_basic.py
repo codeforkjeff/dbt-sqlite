@@ -16,13 +16,7 @@ from dbt.tests.adapter.basic.test_snapshot_check_cols import BaseSnapshotCheckCo
 from dbt.tests.adapter.basic.test_snapshot_timestamp import BaseSnapshotTimestamp
 from dbt.tests.adapter.basic.test_adapter_methods import BaseAdapterMethod
 from dbt.tests.adapter.basic.test_docs_generate import BaseDocsGenerate, BaseDocsGenReferences
-
-
-class TearDownMixin():
-    @classmethod
-    def teardown_class(module):
-        for path in glob.glob('/tmp/dbt-sqlite-tests/*.db'):
-            os.remove(path)
+from tests.functional.mixins import TearDownMixin
 
 
 class TestSimpleMaterializationsSqlite(BaseSimpleMaterializations, TearDownMixin):
