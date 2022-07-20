@@ -52,7 +52,7 @@ class TestDateTrunc(BaseDateTrunc, TearDownMixin):
     pass
 
 
-class TestEscapeSingleQuotes(BaseEscapeSingleQuotesBackslash, TearDownMixin):
+class TestEscapeSingleQuotes(BaseEscapeSingleQuotesQuote, TearDownMixin):
     pass
 
 
