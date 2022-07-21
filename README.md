@@ -80,10 +80,12 @@ dbt_sqlite:
       # files in schemas_and_paths as long as there's no conflicts.
       schema_directory: '/my_project/data'
 
-      # optional: list of file paths of SQLite extensions to load.
-      # crypto.so is needed for snapshots to work; see README
+      # optional: list of file paths of SQLite extensions to load. see README.
+      # crypto.so is needed for snapshots to work
+      # text.so is needed for split_part macro to work
       extensions:
         - "/path/to/sqlean/crypto.so"
+        - "/path/to/sqlean/text.so"
 
 ```
 

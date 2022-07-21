@@ -51,6 +51,7 @@ jaffle_shop:
       schema_directory: '/tmp/jaffle_shop'
       extensions:
         - "/tmp/dbt-sqlite-tests/crypto.so"
+        - "/tmp/dbt-sqlite-tests/text.so"
 
 EOF
 

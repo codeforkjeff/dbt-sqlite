@@ -19,6 +19,7 @@ def dbt_profile_target():
         },
         'schema_directory': '/tmp/dbt-sqlite-tests',
         'extensions' : [
-            "/tmp/dbt-sqlite-tests/crypto.so"
+            "/tmp/dbt-sqlite-tests/crypto.so",
+            "/tmp/dbt-sqlite-tests/text.so"
         ]
     }
