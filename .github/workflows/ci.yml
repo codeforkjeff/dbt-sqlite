@@ -4,13 +4,24 @@ name: dbt-sqlite
 on: [push]
 
 jobs:
-  build:
+  build_3_8:
 
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
       - name: Build docker image
-        run: docker build . --tag dbt-sqlite:$(date +%s)
+        run: docker build --build-arg PYTHON_VERSION=3.8 --tag dbt-sqlite:$GITHUB_SHA .
       - name: Run tests
-        run: docker run dbt-sqlite run_tests.sh
+        run: docker run dbt-sqlite:$GITHUB_SHA run_tests.sh
+
+  build_3_9:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build docker image
+        run: docker build --build-arg PYTHON_VERSION=3.9 --tag dbt-sqlite:$GITHUB_SHA .
+      - name: Run tests
+        run: docker run dbt-sqlite:$GITHUB_SHA run_tests.sh

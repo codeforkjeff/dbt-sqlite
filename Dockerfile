@@ -1,5 +1,7 @@
 
-FROM ubuntu:20.04
+ARG PYTHON_VERSION=3.9
+
+FROM python:${PYTHON_VERSION}-buster
 
 RUN apt-get update && apt-get -y install git python3 python3-pip python3-venv sqlite3 vim virtualenvwrapper wget
 
