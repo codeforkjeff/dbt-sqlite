@@ -2,7 +2,8 @@
 
 docker build . -t dbt-sqlite
 
+docker rm dbt-sqlite-test-container
+
 docker run \
-     --rm \
      --name dbt-sqlite-test-container \
      dbt-sqlite run_tests.sh

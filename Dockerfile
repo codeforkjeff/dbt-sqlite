@@ -19,6 +19,12 @@ COPY . .
 
 RUN pip install -e .
 
+ENV TESTDATA=/opt/dbt-sqlite/testdata
+
+RUN mkdir $TESTDATA
+
+VOLUME /opt/dbt-sqlite/testdata
+
 WORKDIR /opt/dbt-sqlite/project
 
 ENV HOME=/opt/dbt-sqlite/project

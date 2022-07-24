@@ -15,9 +15,9 @@ def dbt_profile_target():
         'database': 'adapter_test',
         'schema': 'main',
         'schemas_and_paths': {
-            'main': '/tmp/dbt-sqlite-tests/adapter_test.db'
+            'main': '/opt/dbt-sqlite/testdata/adapter_test.db'
         },
-        'schema_directory': '/tmp/dbt-sqlite-tests',
+        'schema_directory': '/opt/dbt-sqlite/testdata',
         'extensions' : [
             "/opt/dbt-sqlite/crypto.so",
             "/opt/dbt-sqlite/text.so"

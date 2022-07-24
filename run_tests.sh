@@ -5,10 +5,6 @@ set -e
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 cd $SCRIPT_DIR
 
-echo "HOME=$HOME"
-
-mkdir -p /tmp/dbt-sqlite-tests
-
 # Leaving the database file between runs of pytest can mess up subsequent test runs.
 # Since this runs in a fresh container each time, it's not an issue.
 
