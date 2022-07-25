@@ -1,5 +1,7 @@
 
 import decimal
+import os
+import os.path
 from typing import List, Optional, Set
 
 import agate
@@ -248,3 +250,9 @@ class SQLiteAdapter(SQLAdapter):
         if relation.schema != 'main':
             if self.check_schema_exists(relation.database, relation.schema):
                 self.connections.execute(f"DETACH DATABASE {relation.schema}")
+
+                if relation.schema in self.config.credentials.schemas_and_paths:
+                    path = self.config.credentials.schemas_and_paths[relation.schema]
+                else:
+                    path = os.path.join(self.config.credentials.schema_directory, relation.schema + ".db")
+                os.remove(path)

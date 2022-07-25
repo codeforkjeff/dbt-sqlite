@@ -16,51 +16,50 @@ from dbt.tests.adapter.basic.test_snapshot_check_cols import BaseSnapshotCheckCo
 from dbt.tests.adapter.basic.test_snapshot_timestamp import BaseSnapshotTimestamp
 from dbt.tests.adapter.basic.test_adapter_methods import BaseAdapterMethod
 from dbt.tests.adapter.basic.test_docs_generate import BaseDocsGenerate, BaseDocsGenReferences
-from tests.functional.mixins import TearDownMixin
 
 
-class TestSimpleMaterializationsSqlite(BaseSimpleMaterializations, TearDownMixin):
+class TestSimpleMaterializationsSqlite(BaseSimpleMaterializations):
     pass
 
 
-class TestSingularTestsSqlite(BaseSingularTests, TearDownMixin):
+class TestSingularTestsSqlite(BaseSingularTests):
     pass
 
 
-class TestSingularTestsEphemeralSqlite(BaseSingularTestsEphemeral, TearDownMixin):
+class TestSingularTestsEphemeralSqlite(BaseSingularTestsEphemeral):
     pass
 
 
-class TestEmptySqlite(BaseEmpty, TearDownMixin):
+class TestEmptySqlite(BaseEmpty):
     pass
 
 
-class TestEphemeralSqlite(BaseEphemeral, TearDownMixin):
+class TestEphemeralSqlite(BaseEphemeral):
     pass
 
 
-class TestIncrementalSqlite(BaseIncremental, TearDownMixin):
+class TestIncrementalSqlite(BaseIncremental):
     pass
 
 
-class TestGenericTestsSqlite(BaseGenericTests, TearDownMixin):
+class TestGenericTestsSqlite(BaseGenericTests):
     pass
 
 
-class TestSnapshotCheckColsSqlite(BaseSnapshotCheckCols, TearDownMixin):
+class TestSnapshotCheckColsSqlite(BaseSnapshotCheckCols):
     pass
 
 
-class TestSnapshotTimestampSqlite(BaseSnapshotTimestamp, TearDownMixin):
+class TestSnapshotTimestampSqlite(BaseSnapshotTimestamp):
     pass
 
 
-class TestBaseAdapterMethodSqlite(BaseAdapterMethod, TearDownMixin):
+class TestBaseAdapterMethodSqlite(BaseAdapterMethod):
     pass
 
 
 @pytest.mark.skip("TODO: views can't reference views in other schemas; make our own customized fixtures and expectations")
-class TestDocsGenerateSqlite(BaseDocsGenerate, TearDownMixin):
+class TestDocsGenerateSqlite(BaseDocsGenerate):
     @pytest.fixture(scope="class")
     def expected_catalog(self, project):
         return base_expected_catalog(
@@ -77,7 +76,7 @@ class TestDocsGenerateSqlite(BaseDocsGenerate, TearDownMixin):
 
 
 @pytest.mark.skip('TODO: figure out error with column indices not lining up for seed')
-class TestDocsGenReferencesSqlite(BaseDocsGenReferences, TearDownMixin):
+class TestDocsGenReferencesSqlite(BaseDocsGenReferences):
     @pytest.fixture(scope="class")
     def expected_catalog(self, project):
         return expected_references_catalog(
