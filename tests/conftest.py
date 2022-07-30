@@ -20,6 +20,7 @@ def dbt_profile_target():
         'schema_directory': '/opt/dbt-sqlite/testdata',
         'extensions' : [
             "/opt/dbt-sqlite/crypto.so",
+            "/opt/dbt-sqlite/math.so",
             "/opt/dbt-sqlite/text.so"
         ]
     }

@@ -82,9 +82,11 @@ dbt_sqlite:
 
       # optional: list of file paths of SQLite extensions to load. see README.
       # crypto.so is needed for snapshots to work
+      # math.so is needed for ceil function
       # text.so is needed for split_part macro to work
       extensions:
         - "/path/to/sqlean/crypto.so"
+        - "/path/to/sqlean/math.so"
         - "/path/to/sqlean/text.so"
 
 ```
@@ -128,12 +130,14 @@ not worth the effort.
 
 ## SQLite Extensions
 
-For snapshots to work, you'll need the `crypto` module from SQLean to get an `md5()`
-function. It's recommended that you install all the SQLean modules, as they provide
-many common SQL functions missing from SQLite.
+These modules from SQLean are needed for certain functionality to work:
+- `crypto`: provides `md5()` function needed for snapshots
+- `math`: provides `ceil` and `floor` needed for the datediff macro to work
+- `text`: provides `split_part` function
 
 Precompiled binaries are available for download from the [SQLean github repository page](https://github.com/nalgeon/sqlean).
-You can also compile them yourself if you want.
+You can also compile them yourself if you want. Note that some modules depend on other libraries 
+(`math` for example depends on GLIBC); if an extension fails to load, you may want to try building it yourself.
 
 Point to these module files in your profile config as shown in the example above.
 
