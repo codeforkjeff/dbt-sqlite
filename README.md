@@ -183,9 +183,21 @@ git push --tags
 
 ## Running Tests
 
+This runs the test suite and cleans up after itself:
 ```
 ./run_tests_docker.sh
 ```
+
+To run tests interactively and be able to examine test artifacts:
+```
+docker build . -t dbt-sqlite
+
+docker run --rm -it dbt-sqlite bash
+
+# see output for the locations of artifacts
+run_tests.sh -s
+```
+
 
 ## Credits
 
