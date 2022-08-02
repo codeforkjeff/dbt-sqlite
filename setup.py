@@ -15,14 +15,9 @@ def _get_plugin_version_dict():
     )
     _semver = r'''(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)'''
 
-    # not sure why this works in dbt-snowflake:
-    # it causes setuptools to populate prekind and pre with 'None' strings
-    # so we just don't parse it
+    _pre = r"""((?P<prekind>a|b|rc)(?P<pre>\d+))?"""
+    _version_pattern = fr"""version\s*=\s*["']{_semver}{_pre}["']"""
 
-    #_pre = r'''((?P<prekind>a|b|rc)(?P<pre>\d+))?'''
-    #_version_pattern = fr'''version\s*=\s*["']{_semver}{_pre}["']'''
-
-    _version_pattern = fr'''version\s*=\s*["']{_semver}["']'''
     with open(_version_path) as f:
         match = re.search(_version_pattern, f.read().strip())
         if match is None:
@@ -32,8 +27,7 @@ def _get_plugin_version_dict():
 
 def _get_plugin_version():
     parts = _get_plugin_version_dict()
-    #return "{major}.{minor}.{patch}{prekind}{pre}".format(**parts)
-    return "{major}.{minor}.{patch}".format(**parts)
+    return "{major}.{minor}.{patch}{prekind}{pre}".format(**parts)
 
 
 package_name = "dbt-sqlite"
@@ -63,7 +57,7 @@ setup(
         ]
     },
     install_requires=[
-        "dbt-core>=1.1.0"
+        "dbt-core>=1.2.0"
     ],
     classifiers=[
         'Development Status :: 4 - Beta',
