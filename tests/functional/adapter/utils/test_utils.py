@@ -126,7 +126,7 @@ class TestIntersect(BaseIntersect):
     pass
 
 
-@pytest.mark.skip("TODO: implement listagg")
+@pytest.mark.skip("TODO: implement lastday")
 class TestLastDay(BaseLastDay):
     pass
 
