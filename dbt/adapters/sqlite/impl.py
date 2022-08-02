@@ -1,5 +1,8 @@
 
+import datetime
 import decimal
+import os
+import os.path
 from typing import List, Optional, Set
 
 import agate
@@ -20,6 +23,33 @@ class SQLiteAdapter(SQLAdapter):
     @classmethod
     def date_function(cls):
         return 'date()'
+
+    # sqlite reports the exact string (including case) used when declaring a column of a certain type
+
+    @classmethod
+    def convert_text_type(cls, agate_table: agate.Table, col_idx: int) -> str:
+        return "TEXT"
+
+    @classmethod
+    def convert_number_type(cls, agate_table: agate.Table, col_idx: int) -> str:
+        decimals = agate_table.aggregate(agate.MaxPrecision(col_idx))  # type: ignore[attr-defined]
+        return "NUMERIC" if decimals else "INT"
+
+    @classmethod
+    def convert_boolean_type(cls, agate_table: agate.Table, col_idx: int) -> str:
+        return "BOOLEAN"
+
+    @classmethod
+    def convert_datetime_type(cls, agate_table: agate.Table, col_idx: int) -> str:
+        return "TIMESTAMP WITHOUT TIMEZONE"
+
+    @classmethod
+    def convert_date_type(cls, agate_table: agate.Table, col_idx: int) -> str:
+        return "DATE"
+
+    @classmethod
+    def convert_time_type(cls, agate_table: agate.Table, col_idx: int) -> str:
+        return "TIME"
 
     def get_live_relation_type(self, relation):
         """
@@ -244,11 +274,13 @@ class SQLiteAdapter(SQLAdapter):
     def drop_schema(self, relation: BaseRelation) -> None:
         super().drop_schema(relation)
 
-        # can't detach a database in the middle of a transaction, so commit first.
-        # I wonder if drop_schema() in SQLAdapter should do this, since create_schema() does.
-        self.commit_if_has_connection()
-
         # never detach main
         if relation.schema != 'main':
             if self.check_schema_exists(relation.database, relation.schema):
                 self.connections.execute(f"DETACH DATABASE {relation.schema}")
+
+                if relation.schema in self.config.credentials.schemas_and_paths:
+                    path = self.config.credentials.schemas_and_paths[relation.schema]
+                else:
+                    path = os.path.join(self.config.credentials.schema_directory, relation.schema + ".db")
+                os.remove(path)

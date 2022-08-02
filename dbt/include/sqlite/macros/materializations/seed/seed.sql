@@ -19,8 +19,7 @@
             insert into {{ this.schema }}.{{ this.identifier}} ({{ cols_sql }}) values
             {% for row in chunk -%}
                 ({%- for column in agate_table.column_names -%}
-                    {# sqlite uses ? as placeholder character #}
-                    ?
+                    {{ get_binding_char() }}
                     {%- if not loop.last%},{%- endif %}
                 {%- endfor -%})
                 {%- if not loop.last%},{%- endif %}

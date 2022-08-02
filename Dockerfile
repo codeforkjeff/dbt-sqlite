@@ -1,18 +1,33 @@
 
-FROM ubuntu:20.04
+ARG PYTHON_VERSION=3.9
 
-RUN apt-get update && apt-get -y install git make python3 python3-pip python3-venv sqlite3 vim virtualenvwrapper wget
+FROM python:${PYTHON_VERSION}-bullseye
 
-RUN mkdir /root/dbt-sqlite
+RUN apt-get update && apt-get -y install git python3 python3-pip python3-venv sqlite3 vim virtualenvwrapper wget
 
-WORKDIR /root/dbt-sqlite
+WORKDIR /opt/dbt-sqlite
 
-RUN mkdir -p /tmp/dbt-sqlite-tests
+RUN python3 -m pip install --upgrade pip \
+    && python3 -m pip install pytest pytest-dotenv dbt-core~=1.2.0 dbt-tests-adapter~=1.2.0
 
-RUN cd /tmp/dbt-sqlite-tests && wget https://github.com/nalgeon/sqlean/releases/download/0.12.2/crypto.so
+RUN wget -q https://github.com/nalgeon/sqlean/releases/download/0.15.2/crypto.so
+RUN wget -q https://github.com/nalgeon/sqlean/releases/download/0.15.2/math.so
+RUN wget -q https://github.com/nalgeon/sqlean/releases/download/0.15.2/text.so
 
-RUN pip install dbt-core~=1.1.0
+WORKDIR /opt/dbt-sqlite/src 
 
-RUN pip install pytest pytest-dotenv dbt-tests-adapter==1.1.0
+COPY . .
 
-ENTRYPOINT ["./run_tests.sh"]
+RUN pip install .
+
+ENV TESTDATA=/opt/dbt-sqlite/testdata
+
+RUN mkdir $TESTDATA
+
+VOLUME /opt/dbt-sqlite/testdata
+
+WORKDIR /opt/dbt-sqlite/project
+
+ENV PATH=$PATH:/opt/dbt-sqlite/src
+
+VOLUME /opt/dbt-sqlite/project

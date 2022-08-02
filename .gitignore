@@ -14,3 +14,5 @@ env/
 *.sublime-*
 
 .idea/
+
+*.log
