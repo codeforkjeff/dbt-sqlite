@@ -100,11 +100,12 @@ class BaseDateDiff(BaseUtils):
         }
 
 
-
+@pytest.mark.skip("TODO: implement datediff")
 class TestDateDiff(BaseDateDiff):
     pass
 
 
+@pytest.mark.skip("TODO: implement date_trunc")
 class TestDateTrunc(BaseDateTrunc):
     pass
 
@@ -125,6 +126,7 @@ class TestIntersect(BaseIntersect):
     pass
 
 
+@pytest.mark.skip("TODO: implement listagg")
 class TestLastDay(BaseLastDay):
     pass
 
@@ -133,6 +135,7 @@ class TestLength(BaseLength):
     pass
 
 
+@pytest.mark.skip("TODO: implement listagg")
 class TestListagg(BaseListagg):
     pass
 

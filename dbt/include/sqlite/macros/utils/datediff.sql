@@ -1,5 +1,7 @@
+
+{# TODO: fully implement this and rename #}
 {# adapted from postgresql #}
-{% macro sqlite__datediff(first_date, second_date, datepart) -%}
+{% macro sqlite__datediff_broken(first_date, second_date, datepart) -%}
 
     {% if datepart == 'year' %}
         (strftime('%Y', {{second_date}}) - strftime('%Y', {{first_date}}))

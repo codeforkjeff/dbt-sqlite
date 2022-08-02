@@ -1,4 +1,5 @@
 
+import datetime
 import decimal
 import os
 import os.path
@@ -22,6 +23,33 @@ class SQLiteAdapter(SQLAdapter):
     @classmethod
     def date_function(cls):
         return 'date()'
+
+    # sqlite reports the exact string (including case) used when declaring a column of a certain type
+
+    @classmethod
+    def convert_text_type(cls, agate_table: agate.Table, col_idx: int) -> str:
+        return "TEXT"
+
+    @classmethod
+    def convert_number_type(cls, agate_table: agate.Table, col_idx: int) -> str:
+        decimals = agate_table.aggregate(agate.MaxPrecision(col_idx))  # type: ignore[attr-defined]
+        return "NUMERIC" if decimals else "INT"
+
+    @classmethod
+    def convert_boolean_type(cls, agate_table: agate.Table, col_idx: int) -> str:
+        return "BOOLEAN"
+
+    @classmethod
+    def convert_datetime_type(cls, agate_table: agate.Table, col_idx: int) -> str:
+        return "TIMESTAMP WITHOUT TIMEZONE"
+
+    @classmethod
+    def convert_date_type(cls, agate_table: agate.Table, col_idx: int) -> str:
+        return "DATE"
+
+    @classmethod
+    def convert_time_type(cls, agate_table: agate.Table, col_idx: int) -> str:
+        return "TIME"
 
     def get_live_relation_type(self, relation):
         """
