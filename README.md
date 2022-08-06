@@ -80,10 +80,7 @@ dbt_sqlite:
       # files in schemas_and_paths as long as there's no conflicts.
       schema_directory: '/my_project/data'
 
-      # optional: list of file paths of SQLite extensions to load. see README.
-      # crypto.so is needed for snapshots to work
-      # math.so is needed for ceil function
-      # text.so is needed for split_part macro to work
+      # optional: list of file paths of SQLite extensions to load. see README for more details.
       extensions:
         - "/path/to/sqlean/crypto.so"
         - "/path/to/sqlean/math.so"
@@ -107,8 +104,8 @@ and schemas.)
   get attached when database connection is created.
 
   - If dbt needs to create a new schema, it will be created in `schema_directory`
-  as `schema_name.db`. Dropping a schema results in dropping all its relations
-  and detaching the database file from the session.
+  as `schema_name.db`. Dropping a schema results in dropping all its relations,
+  detaching the database file from the session, and deleting the file.
 
   - Schema names are stored in view definitions, so when you access a non-'main'
   database file outside dbt, you'll need to attach it using the same name, or
@@ -131,7 +128,7 @@ not worth the effort.
 ## SQLite Extensions
 
 These modules from SQLean are needed for certain functionality to work:
-- `crypto`: provides `md5()` function needed for snapshots
+- `crypto`: provides `md5` function needed for snapshots
 - `math`: provides `ceil` and `floor` needed for the datediff macro to work
 - `text`: provides `split_part` function
 
