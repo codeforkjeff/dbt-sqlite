@@ -166,7 +166,7 @@ class SQLiteAdapter(SQLAdapter):
                             '',
                             table_row['name'],
                             table_row['cid'],
-                            table_row['type'] or 'TEXT',
+                            table_row['type'] or 'UNKNOWN',
                             ''
                         ])
 

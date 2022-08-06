@@ -125,6 +125,10 @@ backup-and-swap-in functionality work properly. Given how SQLite aggressively
 [locks](https://sqlite.org/lockingv3.html) the database anyway, it's probably
 not worth the effort.
 
+- When inspecting the data types of columns, SQLite returns a blank value for
+  columns in views (even if it's the result of a CAST) and in certain cases
+  for columns in tables. These will show up in the generated docs as type 'UNKNOWN'.
+
 ## SQLite Extensions
 
 These modules from SQLean are needed for certain functionality to work:
