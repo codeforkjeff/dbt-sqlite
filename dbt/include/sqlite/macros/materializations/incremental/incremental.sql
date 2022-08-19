@@ -4,12 +4,14 @@
     {%- set dest_cols_csv = dest_columns | map(attribute='quoted') | join(', ') -%}
 
     {%- if unique_key is not none -%}
+      {% call statement('sqlite_incremental_upsert') -%}
     delete
     from {{ target_relation }}
     where ({{ unique_key }}) in (
         select ({{ unique_key }})
         from {{ tmp_relation }}
     );
+      {%- endcall %}
     {%- endif %}
 
     {# difference here is sqlite doesn't want parens around the select query #}
