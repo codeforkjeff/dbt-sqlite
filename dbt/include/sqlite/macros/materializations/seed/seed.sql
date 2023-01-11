@@ -1,6 +1,6 @@
 
 {% macro sqlite__load_csv_rows(model, agate_table) %}
-    {% set batch_size = 100000 %}
+    {% set batch_size = 10000 %}
     {% set cols_sql = get_seed_column_quoted_csv(model, agate_table.column_names) %}
     {% set bindings = [] %}
 
