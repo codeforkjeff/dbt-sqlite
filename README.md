@@ -126,9 +126,16 @@ backup-and-swap-in functionality work properly. Given how SQLite aggressively
 [locks](https://sqlite.org/lockingv3.html) the database anyway, it's probably
 not worth the effort.
 
-- When inspecting the data types of columns, SQLite returns a blank value for
-  columns in views (even if it's the result of a CAST) and in certain cases
-  for columns in tables. These will show up in the generated docs as type 'UNKNOWN'.
+- It's often idiomatic with dbt to use plentiful CASTs. The results of CASTs in
+  SQLite are tricky and depend on how the model is materialized. In a nutshell,
+  using table materializations gives better results.
+
+  - When materialized as a view, the resulting column type from any CAST (or
+    any expression) will always be empty. The SQLite adapter will regard this
+    column type as 'UNKNOWN'.
+
+  - When materialized as a table, a CAST will result in the specified type for
+    INT, REAL, TEXT; casts to NUMERIC and BOOLEAN result in a 'NUM' column type.
 
 ## SQLite Extensions
 
