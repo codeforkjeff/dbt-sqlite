@@ -102,7 +102,7 @@ class SQLiteAdapter(SQLAdapter):
         for row in results:
             new_row = [
                 row[1],
-                row[2] or 'TEXT',
+                row[2] or 'UNKNOWN',
                 None,
                 None,
                 None
