@@ -24,7 +24,9 @@ class SQLiteAdapter(SQLAdapter):
     def date_function(cls):
         return 'date()'
 
-    # sqlite reports the exact string (including case) used when declaring a column of a certain type
+    # sqlite reports the exact string (including case) used when declaring a column of a certain type.
+    # the types here should correspond to affinities recognized by SQLite.
+    # see https://www.sqlite.org/datatype3.html
 
     @classmethod
     def convert_text_type(cls, agate_table: agate.Table, col_idx: int) -> str:
@@ -33,23 +35,23 @@ class SQLiteAdapter(SQLAdapter):
     @classmethod
     def convert_number_type(cls, agate_table: agate.Table, col_idx: int) -> str:
         decimals = agate_table.aggregate(agate.MaxPrecision(col_idx))  # type: ignore[attr-defined]
-        return "NUMERIC" if decimals else "INT"
+        return "REAL" if decimals else "INT"
 
     @classmethod
     def convert_boolean_type(cls, agate_table: agate.Table, col_idx: int) -> str:
-        return "BOOLEAN"
+        return "INT"
 
     @classmethod
     def convert_datetime_type(cls, agate_table: agate.Table, col_idx: int) -> str:
-        return "TIMESTAMP WITHOUT TIMEZONE"
+        return "TEXT"
 
     @classmethod
     def convert_date_type(cls, agate_table: agate.Table, col_idx: int) -> str:
-        return "DATE"
+        return "TEXT"
 
     @classmethod
     def convert_time_type(cls, agate_table: agate.Table, col_idx: int) -> str:
-        return "TIME"
+        return "TEXT"
 
     def get_live_relation_type(self, relation):
         """
@@ -102,7 +104,7 @@ class SQLiteAdapter(SQLAdapter):
         for row in results:
             new_row = [
                 row[1],
-                row[2] or 'TEXT',
+                row[2] or 'UNKNOWN',
                 None,
                 None,
                 None
