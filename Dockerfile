@@ -16,9 +16,14 @@ RUN wget -q https://github.com/nalgeon/sqlean/releases/download/0.15.2/text.so
 
 WORKDIR /opt/dbt-sqlite/src 
 
-COPY . .
+COPY setup.py .
+COPY dbt ./dbt
 
 RUN pip install .
+
+COPY run_tests.sh .
+COPY pytest.ini .
+COPY tests ./tests
 
 ENV TESTDATA=/opt/dbt-sqlite/testdata
 
