@@ -24,8 +24,6 @@ git clone --depth 1 https://github.com/dbt-labs/jaffle_shop.git
 
 cd jaffle_shop
 
-git pull
-
 mkdir -p /tmp/jaffle_shop
 
 mkdir -p $HOME/.dbt
@@ -57,4 +55,6 @@ jaffle_shop:
 
 EOF
 
+dbt seed
+dbt run
 dbt docs generate

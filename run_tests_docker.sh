@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 docker build . -t dbt-sqlite
 
 docker run \
