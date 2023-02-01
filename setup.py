@@ -9,25 +9,18 @@ from setuptools import setup
 this_directory = os.path.abspath(os.path.dirname(__file__))
 
 # get this package's version from dbt/adapters/<name>/__version__.py
-def _get_plugin_version_dict():
+def _get_plugin_version():
     _version_path = os.path.join(
         this_directory, 'dbt', 'adapters', 'sqlite', '__version__.py'
     )
-    _semver = r'''(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)'''
-
+    _semver = r"""(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)"""
     _pre = r"""((?P<prekind>a|b|rc)(?P<pre>\d+))?"""
     _version_pattern = fr"""version\s*=\s*["']{_semver}{_pre}["']"""
 
     with open(_version_path) as f:
-        match = re.search(_version_pattern, f.read().strip())
-        if match is None:
-            raise ValueError(f'invalid version at {_version_path}')
-        return match.groupdict()
-
-
-def _get_plugin_version():
-    parts = _get_plugin_version_dict()
-    return "{major}.{minor}.{patch}{prekind}{pre}".format(**parts)
+        line = f.read().strip()
+        delim = '"' if '"' in line else "'"
+        return line.split(delim)[1]
 
 
 package_name = "dbt-sqlite"
