@@ -21,7 +21,13 @@
     ;
 {%- endmacro %}
 
-{# override this just so we can call sqlite_incremental_upsert #}
+{#
+the incremental materialization was overhauled in dbt 1.3.0 to make it easier to override
+adapter-specific pieces, but it's hard to use it as intended in our case, because it renames
+models, which is difficult to handle so we just avoid it
+
+also, we call sqlite_incremental_upsert b/c the syntax for insert differs
+#}
 {% materialization incremental, adapter='sqlite' -%}
 
   {% set unique_key = config.get('unique_key') %}
@@ -62,6 +68,10 @@
   {% endcall %}
 
   {% do persist_docs(target_relation, model) %}
+
+  {% if existing_relation is none or existing_relation.is_view or should_full_refresh() %}
+    {% do create_indexes(target_relation) %}
+  {% endif %}
 
   {{ run_hooks(post_hooks, inside_transaction=True) }}
 

@@ -13,10 +13,6 @@ def _get_plugin_version():
     _version_path = os.path.join(
         this_directory, 'dbt', 'adapters', 'sqlite', '__version__.py'
     )
-    _semver = r"""(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)"""
-    _pre = r"""((?P<prekind>a|b|rc)(?P<pre>\d+))?"""
-    _version_pattern = fr"""version\s*=\s*["']{_semver}{_pre}["']"""
-
     with open(_version_path) as f:
         line = f.read().strip()
         delim = '"' if '"' in line else "'"
@@ -50,7 +46,7 @@ setup(
         ]
     },
     install_requires=[
-        "dbt-core>=1.2.0"
+        "dbt-core>=1.3.0"
     ],
     classifiers=[
         'Development Status :: 4 - Beta',

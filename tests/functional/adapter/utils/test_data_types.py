@@ -1,5 +1,6 @@
 import pytest
 from dbt.tests.adapter.utils.data_types.test_type_bigint import BaseTypeBigInt
+from dbt.tests.adapter.utils.data_types.test_type_boolean import BaseTypeBoolean
 from dbt.tests.adapter.utils.data_types.test_type_float import BaseTypeFloat
 from dbt.tests.adapter.utils.data_types.test_type_int import BaseTypeInt
 from dbt.tests.adapter.utils.data_types.test_type_numeric import BaseTypeNumeric
@@ -23,7 +24,13 @@ from dbt.tests.adapter.utils.data_types.test_type_timestamp import BaseTypeTimes
 class TestTypeBigInt(BaseTypeBigInt):
     pass
 
-    
+
+# users should imlement boolean columns as INT with values of 0 or 1
+@pytest.mark.skip("boolean not supported in SQLite")
+class TestTypeBoolean(BaseTypeBoolean):
+    pass
+
+
 class TestTypeFloat(BaseTypeFloat):
 
     models__actual_sql = """
