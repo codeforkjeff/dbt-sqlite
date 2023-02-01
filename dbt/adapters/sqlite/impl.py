@@ -12,7 +12,7 @@ from dbt.adapters.sql import SQLAdapter
 from dbt.adapters.sqlite import SQLiteConnectionManager
 from dbt.adapters.sqlite.relation import SQLiteRelation
 from dbt.contracts.graph.manifest import Manifest
-from dbt.exceptions import NotImplementedException
+from dbt.exceptions import NotImplementedError
 
 
 class SQLiteAdapter(SQLAdapter):
@@ -93,7 +93,7 @@ class SQLiteAdapter(SQLAdapter):
             self.connections.execute(new_definition)
 
         else:
-            raise NotImplementedException(
+            raise NotImplementedError(
                 f"I don't know how to rename this type of relation: {from_relation.type}," +
                 f" from: {from_relation}, to: {to_relation}")
 

@@ -12,9 +12,9 @@ from dbt.adapters.sql import SQLConnectionManager
 from dbt.contracts.connection import AdapterResponse
 from dbt.contracts.connection import Connection
 from dbt.exceptions import (
-    DatabaseException,
-    FailedToConnectException,
-    RuntimeException
+    DbtDatabaseError,
+    FailedToConnectError,
+    DbtRuntimeError
 )
 from dbt.logger import GLOBAL_LOGGER as logger
 
@@ -66,7 +66,7 @@ class SQLiteConnectionManager(SQLConnectionManager):
                 handle: sqlite3.Connection = sqlite3.connect(schemas_and_paths['main'])
                 attached.append(schemas_and_paths['main'])
             else:
-                raise FailedToConnectException("at least one schema must be called 'main'")
+                raise FailedToConnectError("at least one schema must be called 'main'")
 
             if len(credentials.extensions) > 0:
                 handle.enable_load_extension(True)
@@ -92,7 +92,7 @@ class SQLiteConnectionManager(SQLConnectionManager):
                     if schema not in attached:
                         cursor.execute(f"attach '{path}' as '{schema}'")
                     else:
-                        raise FailedToConnectException(
+                        raise FailedToConnectError(
                             f"found {path} while scanning schema_directory, but cannot attach it as '{schema}' " +
                             f"because that schema name is already defined in schemas_and_paths. " +
                             f"fix your ~/.dbt/profiles.yml file")
@@ -112,7 +112,7 @@ class SQLiteConnectionManager(SQLConnectionManager):
             connection.handle = None
             connection.state = "fail"
 
-            raise FailedToConnectException(str(e))
+            raise FailedToConnectError(str(e))
         except Exception as e:
             print(f"Unknown error opening SQLite connection: {e}")
             raise e
@@ -151,12 +151,12 @@ class SQLiteConnectionManager(SQLConnectionManager):
         except sqlite3.DatabaseError as e:
             self.release()
             logger.debug("sqlite3 error: {}".format(str(e)))
-            raise DatabaseException(str(e))
+            raise DbtDatabaseError(str(e))
         except Exception as e:
             logger.debug("Error running SQL: {}".format(sql))
             logger.debug("Rolling back transaction.")
             self.release()
-            raise RuntimeException(str(e))
+            raise DbtRuntimeError(str(e))
 
     def add_query(
         self,
