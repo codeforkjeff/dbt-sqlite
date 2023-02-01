@@ -137,6 +137,11 @@ not worth the effort.
   - When materialized as a table, a CAST will result in the specified type for
     INT, REAL, TEXT; casts to NUMERIC and BOOLEAN result in a 'NUM' column type.
 
+- To get the best fidelity to your seed data, declare all the column types as TEXT
+  in your [seed configurations](https://docs.getdbt.com/reference/seed-configs)
+  and create a model to do the casts and conversions.
+
+
 ## SQLite Extensions
 
 These modules from SQLean are needed for certain functionality to work:
