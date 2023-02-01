@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from dbt.adapters.base.relation import BaseRelation, Policy
 
@@ -19,5 +19,5 @@ class SQLiteIncludePolicy(Policy):
 
 @dataclass(frozen=True, eq=False, repr=False)
 class SQLiteRelation(BaseRelation):
-    quote_policy: SQLiteQuotePolicy = SQLiteQuotePolicy()
-    include_policy: SQLiteIncludePolicy = SQLiteIncludePolicy()
+    quote_policy: SQLiteQuotePolicy = field(default_factory=SQLiteQuotePolicy)
+    include_policy: SQLiteIncludePolicy = field(default_factory=SQLiteIncludePolicy)
