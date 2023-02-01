@@ -5,9 +5,13 @@ from dbt.tests.adapter.utils.fixture_datediff import (
     models__test_datediff_yml,
 )
 from dbt.tests.adapter.utils.test_any_value import BaseAnyValue
+from dbt.tests.adapter.utils.test_array_append import BaseArrayAppend
+from dbt.tests.adapter.utils.test_array_concat import BaseArrayConcat
+from dbt.tests.adapter.utils.test_array_construct import BaseArrayConstruct
 from dbt.tests.adapter.utils.test_bool_or import BaseBoolOr
 from dbt.tests.adapter.utils.test_cast_bool_to_text import BaseCastBoolToText
 from dbt.tests.adapter.utils.test_concat import BaseConcat
+from dbt.tests.adapter.utils.test_current_timestamp import BaseCurrentTimestampNaive
 from dbt.tests.adapter.utils.test_dateadd import BaseDateAdd
 #from dbt.tests.adapter.utils.test_datediff import BaseDateDiff
 from dbt.tests.adapter.utils.test_date_trunc import BaseDateTrunc
@@ -31,6 +35,21 @@ class TestAnyValue(BaseAnyValue):
     pass
 
 
+@pytest.mark.skip("arrays not supported in SQLite")
+class TestArrayAppend(BaseArrayAppend):
+    pass
+
+
+@pytest.mark.skip("arrays not supported in SQLite")
+class TestArrayConcat(BaseArrayConcat):
+    pass
+
+
+@pytest.mark.skip("arrays not supported in SQLite")
+class TestArrayConstruct(BaseArrayConstruct):
+    pass
+
+
 class TestBoolOr(BaseBoolOr):
     pass
 
@@ -40,6 +59,11 @@ class TestCastBoolToText(BaseCastBoolToText):
 
 
 class TestConcat(BaseConcat):
+    pass
+
+
+@pytest.mark.skip("timestamps not supported in SQLite")
+class TestCurrentTimestampNaive(BaseCurrentTimestampNaive):
     pass
 
 
