@@ -1,5 +1,16 @@
 {% macro sqlite__date_trunc(datepart, date) -%}
-{%- set datepart = datepart.lower() -%}
+{#- Truncate a date to a specified datepart.
+
+`sqlite__date_trunc` always returns a datetime.
+
+Only supports the following date parts:
+"year", "quarter", "month", "week", "day", "hour", "minute", "second"
+
+Makes use of official datetime modifiers when possible.
+For details of date and time functions in sqlite, refer to the official documentation:
+https://www.sqlite.org/lang_datefunc.html -#}
+{#- datepart can be quoted or unquoted, lower or uppercase -#}
+{%- set datepart = datepart.lower().strip("'") -%}
 
 {#- use the official modifier whenever possible -#}
 {%- if datepart == "year" -%} datetime({{ date }}, 'start of year')
