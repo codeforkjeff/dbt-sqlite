@@ -37,7 +37,7 @@ class SQLiteCredentials(Credentials):
         Hashed and included in anonymous telemetry to track adapter adoption.
         Pick a field that can uniquely identify one team/organization building with this adapter
         """
-        return self.host
+        return "sqlite_localhost"
 
     def _connection_keys(self):
         """ Keys to show when debugging """
