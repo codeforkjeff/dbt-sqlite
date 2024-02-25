@@ -2,6 +2,7 @@
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 import glob
+import json
 import os.path
 import sqlite3
 from typing import Optional, Tuple, Any, Dict, List
@@ -37,7 +38,7 @@ class SQLiteCredentials(Credentials):
         Hashed and included in anonymous telemetry to track adapter adoption.
         Pick a field that can uniquely identify one team/organization building with this adapter
         """
-        return self.host
+        return json.dumps(self.schemas_and_paths, sort_keys=True)
 
     def _connection_keys(self):
         """ Keys to show when debugging """
@@ -73,7 +74,7 @@ class SQLiteConnectionManager(SQLConnectionManager):
 
             for ext_path in credentials.extensions:
                 handle.load_extension(ext_path)
-            
+
             cursor = handle.cursor()
 
             for schema in set(schemas_and_paths.keys()) - set(['main']):
