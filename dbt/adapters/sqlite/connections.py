@@ -2,9 +2,9 @@
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 import glob
-import json
 import os.path
 import sqlite3
+from socket import gethostname
 from typing import Optional, Tuple, Any, Dict, List
 
 
@@ -38,7 +38,7 @@ class SQLiteCredentials(Credentials):
         Hashed and included in anonymous telemetry to track adapter adoption.
         Pick a field that can uniquely identify one team/organization building with this adapter
         """
-        return json.dumps(self.schemas_and_paths, sort_keys=True)
+        return gethostname()
 
     def _connection_keys(self):
         """ Keys to show when debugging """
