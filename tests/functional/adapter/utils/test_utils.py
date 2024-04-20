@@ -1,5 +1,6 @@
 import pytest
 from dbt.tests.adapter.utils.base_utils import BaseUtils
+from dbt.tests.adapter.utils.fixture_date_trunc import models__test_date_trunc_yml
 from dbt.tests.adapter.utils.fixture_datediff import (
     seeds__data_datediff_csv,
     models__test_datediff_yml,
@@ -14,7 +15,6 @@ from dbt.tests.adapter.utils.test_concat import BaseConcat
 from dbt.tests.adapter.utils.test_current_timestamp import BaseCurrentTimestampNaive
 from dbt.tests.adapter.utils.test_dateadd import BaseDateAdd
 #from dbt.tests.adapter.utils.test_datediff import BaseDateDiff
-from dbt.tests.adapter.utils.test_date_trunc import BaseDateTrunc
 from dbt.tests.adapter.utils.test_escape_single_quotes import BaseEscapeSingleQuotesQuote
 from dbt.tests.adapter.utils.test_escape_single_quotes import BaseEscapeSingleQuotesBackslash
 from dbt.tests.adapter.utils.test_except import BaseExcept
@@ -129,9 +129,50 @@ class TestDateDiff(BaseDateDiff):
     pass
 
 
-@pytest.mark.skip("TODO: implement date_trunc")
-class TestDateTrunc(BaseDateTrunc):
-    pass
+class TestDateTrunc(BaseUtils):
+    seeds__data_date_trunc_csv = """date_to_trunc,year,quarter,month,week,day,hour,minute,second
+1999-12-31 23:59:59.999999,1999-01-01 00:00:00,1999-10-01 00:00:00,1999-12-01 00:00:00,1999-12-26 00:00:00,1999-12-31 00:00:00,1999-12-31 23:00:00,1999-12-31 23:59:00,1999-12-31 23:59:59
+1999-12-31,1999-01-01 00:00:00,1999-10-01 00:00:00,1999-12-01 00:00:00,1999-12-26 00:00:00,1999-12-31 00:00:00,1999-12-31 00:00:00,1999-12-31 00:00:00,1999-12-31 00:00:00
+1999-01-01,1999-01-01 00:00:00,1999-01-01 00:00:00,1999-01-01 00:00:00,1998-12-27 00:00:00,1999-01-01 00:00:00,1999-01-01 00:00:00,1999-01-01 00:00:00,1999-01-01 00:00:00
+1999-05-16 12:21,1999-01-01 00:00:00,1999-04-01 00:00:00,1999-05-01 00:00:00,1999-05-16 00:00:00,1999-05-16 00:00:00,1999-05-16 12:00:00,1999-05-16 12:21:00,1999-05-16 12:21:00
+"""
+
+    models__test_date_trunc_sql = """
+    with data as (
+        select * from {{ ref('data_date_trunc') }}
+    )
+    """ + " union all ".join(
+        """
+    select
+        {{{{ date_trunc("{datepart}", "date_to_trunc") }}}} as actual,
+        {datepart} as expected
+    from data""".format(
+            datepart=datepart
+        )
+        for datepart in [
+            "year",
+            "quarter",
+            "month",
+            "week",
+            "day",
+            "hour",
+            "minute",
+            "second",
+        ]
+    )
+
+    @pytest.fixture(scope="class")
+    def seeds(self):
+        return {"data_date_trunc.csv": self.seeds__data_date_trunc_csv}
+
+    @pytest.fixture(scope="class")
+    def models(self):
+        return {
+            "test_date_trunc.yml": models__test_date_trunc_yml,
+            "test_date_trunc.sql": self.interpolate_macro_namespace(
+                self.models__test_date_trunc_sql, "date_trunc"
+            ),
+        }
 
 
 class TestEscapeSingleQuotes(BaseEscapeSingleQuotesQuote):
