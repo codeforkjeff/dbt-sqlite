@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 import glob
 import os.path
 import sqlite3
+from socket import gethostname
 from typing import Optional, Tuple, Any, Dict, List
 
 
@@ -37,7 +38,7 @@ class SQLiteCredentials(Credentials):
         Hashed and included in anonymous telemetry to track adapter adoption.
         Pick a field that can uniquely identify one team/organization building with this adapter
         """
-        return self.host
+        return gethostname()
 
     def _connection_keys(self):
         """ Keys to show when debugging """
