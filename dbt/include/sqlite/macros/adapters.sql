@@ -79,14 +79,22 @@
 {% endmacro %}
 
 {% macro sqlite__create_table_as(temporary, relation, sql) -%}
-      create {% if temporary -%}
+    {% set contract_config = config.get('contract') %}
+    {% if contract_config.enforced %}
+        {{exceptions.warn("Model contracts cannot be enforced by sqlite!")}}
+    {% endif %}
+    create {% if temporary -%}
         temporary
-      {%- endif %} table {{ relation }}
-      as
+    {%- endif %} table {{ relation }}
+    as
         {{ sql }}
 {% endmacro %}
 
 {% macro sqlite__create_view_as(relation, sql, auto_begin=False) -%}
+    {% set contract_config = config.get('contract') %}
+    {% if contract_config.enforced %}
+        {{exceptions.warn("Model contracts cannot be enforced by sqlite!")}}
+    {% endif %}
     create view {{ relation }} as
     {{ sql }};
 {%- endmacro %}
@@ -95,15 +103,6 @@
   {# no-op #}  
   {# see SQLiteAdapter.rename_relation() #}
 {% endmacro %}
-
-{% macro sqlite__snapshot_get_time() -%}
-  datetime()
-{%- endmacro %}
-
-{% macro sqlite__snapshot_string_as_time(timestamp) -%}
-    {# just return the string; SQLite doesn't have a timestamp data type per se #}
-    {{ return("'" + timestamp|string + "'") }}
-{%- endmacro %}
 
 {#
 the only allowable schema for temporary tables in SQLite is 'temp', so set
@@ -116,7 +115,3 @@ that here when making the relation and everything else should Just Work
 
     {% do return(tmp_relation) %}
 {% endmacro %}
-
-{% macro sqlite__current_timestamp() -%}
-  datetime()
-{%- endmacro %}
