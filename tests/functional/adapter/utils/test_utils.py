@@ -33,7 +33,9 @@ from dbt.tests.adapter.utils.test_right import BaseRight
 from dbt.tests.adapter.utils.test_safe_cast import BaseSafeCast
 from dbt.tests.adapter.utils.test_split_part import BaseSplitPart
 from dbt.tests.adapter.utils.test_string_literal import BaseStringLiteral
-
+from dbt.tests.adapter.utils.test_equals import BaseEquals
+from dbt.tests.adapter.utils.test_null_compare import BaseMixedNullCompare, BaseNullCompare
+from dbt.tests.adapter.utils.test_validate_sql import BaseValidateSqlMethod
 
 class TestAnyValue(BaseAnyValue):
     pass
@@ -212,4 +214,16 @@ class TestSplitPart(BaseSplitPart):
   pass
 
 class TestStringLiteral(BaseStringLiteral):
+    pass
+
+class TestEquals(BaseEquals):
+    pass
+
+class TestMixedNullCompare(BaseMixedNullCompare):
+    pass
+
+class TestNullCompare(BaseNullCompare):
+    pass
+
+class TestValidateSqlMethod(BaseValidateSqlMethod):
     pass
