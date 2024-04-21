@@ -74,7 +74,7 @@ class SQLiteConnectionManager(SQLConnectionManager):
 
             for ext_path in credentials.extensions:
                 handle.load_extension(ext_path)
-            
+
             cursor = handle.cursor()
 
             for schema in set(schemas_and_paths.keys()) - set(['main']):

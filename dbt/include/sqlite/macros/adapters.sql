@@ -95,8 +95,7 @@
     {% if contract_config.enforced %}
         {{exceptions.warn("Model contracts cannot be enforced by sqlite!")}}
     {% endif %}
-    create view {{ relation }} 
-    as
+    create view {{ relation }} as
     {{ sql }};
 {%- endmacro %}
 
