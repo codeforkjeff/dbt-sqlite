@@ -1,8 +1,32 @@
-{% macro sqlite__dateadd(datepart, interval, from_date_or_timestamp) %}
+{% macro sqlite__dateadd(from_date_or_timestamp, interval, datepart) %}
 
-    date(
-        {{ from_date_or_timestamp }},
-        "{{ datepart }} {{ datepart }}"
-        )
-
+    -- Perform date addition based on the detected input format using CASE statements with LIKE for string contains
+    CASE
+        -- Check if format is DATETIME
+        WHEN {{ from_date_or_timestamp }} LIKE '%:%' OR ({{ from_date_or_timestamp }} LIKE '%T%' AND {{ from_date_or_timestamp }} LIKE '%Z%') THEN
+            CASE
+                WHEN LOWER({{ datepart }}) = 'second' THEN datetime({{ from_date_or_timestamp }}, '+' || {{ interval }} || ' seconds')
+                WHEN LOWER({{ datepart }}) = 'minute' THEN datetime({{ from_date_or_timestamp }}, '+' || {{ interval }} || ' minutes')
+                WHEN LOWER({{ datepart }}) = 'hour' THEN datetime({{ from_date_or_timestamp }}, '+' || {{ interval }} || ' hours')
+                WHEN LOWER({{ datepart }}) = 'day' THEN datetime({{ from_date_or_timestamp }}, '+' || {{ interval }} || ' days')
+                WHEN LOWER({{ datepart }}) = 'week' THEN datetime({{ from_date_or_timestamp }}, '+' || ({{ interval }} * 7) || ' days')
+                WHEN LOWER({{ datepart }}) = 'month' THEN datetime({{ from_date_or_timestamp }}, '+' || {{ interval }} || ' months')
+                WHEN LOWER({{ datepart }}) = 'quarter' THEN datetime({{ from_date_or_timestamp }}, '+' || ({{ interval }} * 3) || ' months')
+                WHEN LOWER({{ datepart }}) = 'year' THEN datetime({{ from_date_or_timestamp }}, '+' || {{ interval }} || ' years')
+                ELSE NULL
+            END
+        -- Check if format is DATE
+        WHEN {{ from_date_or_timestamp }} LIKE '%-%' AND {{ from_date_or_timestamp }} NOT LIKE '%T%' AND {{ from_date_or_timestamp }} NOT LIKE '% %' THEN
+            CASE
+                WHEN LOWER({{ datepart }}) IN ('second', 'minute', 'hour') THEN date({{ from_date_or_timestamp }})
+                WHEN LOWER({{ datepart }}) = 'day' THEN date({{ from_date_or_timestamp }}, '+' || {{ interval }} || ' days')
+                WHEN LOWER({{ datepart }}) = 'week' THEN date({{ from_date_or_timestamp }}, '+' || ({{ interval }} * 7) || ' days')
+                WHEN LOWER({{ datepart }}) = 'month' THEN date({{ from_date_or_timestamp }}, '+' || {{ interval }} || ' months')
+                WHEN LOWER({{ datepart }}) = 'quarter' THEN date({{ from_date_or_timestamp }}, '+' || ({{ interval }} * 3) || ' months')
+                WHEN LOWER({{ datepart }}) = 'year' THEN date({{ from_date_or_timestamp }}, '+' || {{ interval }} || ' years')
+                ELSE NULL
+            END
+        ELSE
+            NULL
+    END
 {% endmacro %}
