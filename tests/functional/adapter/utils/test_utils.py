@@ -78,7 +78,7 @@ class BaseDateAdd(BaseUtils):
     )
     
     select
-        {{ dateadd('from_time', 'interval_length', 'datepart') }} AS actual,
+        {{ dateadd('datepart', 'interval_length', 'from_time') }} AS actual,
         result as expected
     from data
     """

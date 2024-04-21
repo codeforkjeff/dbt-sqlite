@@ -1,4 +1,4 @@
-{% macro sqlite__dateadd(from_date_or_timestamp, interval, datepart) %}
+{% macro sqlite__dateadd(datepart, interval, from_date_or_timestamp) %}
     -- If provided a DATETIME, returns a DATETIME
     -- If provided a DATE, returns a DATE
 
