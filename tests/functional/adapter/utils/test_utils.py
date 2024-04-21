@@ -124,7 +124,6 @@ class BaseDateDiff(BaseUtils):
         }
 
 
-@pytest.mark.skip("TODO: implement datediff")
 class TestDateDiff(BaseDateDiff):
     pass
 
