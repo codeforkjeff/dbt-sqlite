@@ -1,8 +1,9 @@
 {% macro sqlite__dateadd(from_date_or_timestamp, interval, datepart) %}
+    -- If provided a DATETIME, returns a DATETIME
+    -- If provided a DATE, returns a DATE
 
-    -- Perform date addition based on the detected input format using CASE statements with LIKE for string contains
     CASE
-        -- Check if format is DATETIME
+        -- Matches DATETIME type based on ISO-8601 
         WHEN {{ from_date_or_timestamp }} LIKE '%:%' OR ({{ from_date_or_timestamp }} LIKE '%T%' AND {{ from_date_or_timestamp }} LIKE '%Z%') THEN
             CASE
                 WHEN LOWER({{ datepart }}) = 'second' THEN datetime({{ from_date_or_timestamp }}, '+' || {{ interval }} || ' seconds')
@@ -15,7 +16,7 @@
                 WHEN LOWER({{ datepart }}) = 'year' THEN datetime({{ from_date_or_timestamp }}, '+' || {{ interval }} || ' years')
                 ELSE NULL
             END
-        -- Check if format is DATE
+        -- Matches DATE type based on ISO-8601
         WHEN {{ from_date_or_timestamp }} LIKE '%-%' AND {{ from_date_or_timestamp }} NOT LIKE '%T%' AND {{ from_date_or_timestamp }} NOT LIKE '% %' THEN
             CASE
                 WHEN LOWER({{ datepart }}) IN ('second', 'minute', 'hour') THEN date({{ from_date_or_timestamp }})
