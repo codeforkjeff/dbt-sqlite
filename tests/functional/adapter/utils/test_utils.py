@@ -4,6 +4,10 @@ from dbt.tests.adapter.utils.fixture_datediff import (
     seeds__data_datediff_csv,
     models__test_datediff_yml,
 )
+from dbt.tests.adapter.utils.fixture_dateadd import (
+    seeds__data_dateadd_csv,
+    models__test_dateadd_yml,
+)
 from dbt.tests.adapter.utils.test_any_value import BaseAnyValue
 from dbt.tests.adapter.utils.test_array_append import BaseArrayAppend
 from dbt.tests.adapter.utils.test_array_concat import BaseArrayConcat
@@ -29,6 +33,9 @@ from dbt.tests.adapter.utils.test_right import BaseRight
 from dbt.tests.adapter.utils.test_safe_cast import BaseSafeCast
 from dbt.tests.adapter.utils.test_split_part import BaseSplitPart
 from dbt.tests.adapter.utils.test_string_literal import BaseStringLiteral
+from dbt.tests.adapter.utils.test_equals import BaseEquals
+from dbt.tests.adapter.utils.test_null_compare import BaseMixedNullCompare, BaseNullCompare
+from dbt.tests.adapter.utils.test_validate_sql import BaseValidateSqlMethod
 
 
 class TestAnyValue(BaseAnyValue):
@@ -65,6 +72,32 @@ class TestConcat(BaseConcat):
 @pytest.mark.skip("timestamps not supported in SQLite")
 class TestCurrentTimestampNaive(BaseCurrentTimestampNaive):
     pass
+
+class BaseDateAdd(BaseUtils):
+
+    models__test_dateadd_sql = """
+    with data as (
+        select * from {{ ref('data_dateadd') }}
+    )
+    
+    select
+        {{ dateadd('datepart', 'interval_length', 'from_time') }} AS actual,
+        result as expected
+    from data
+    """
+
+    @pytest.fixture(scope="class")
+    def seeds(self):
+        return {"data_dateadd.csv": seeds__data_dateadd_csv}
+
+    @pytest.fixture(scope="class")
+    def models(self):
+        return {
+            "test_dateadd.yml": models__test_dateadd_yml,
+            "test_dateadd.sql": self.interpolate_macro_namespace(
+                self.models__test_dateadd_sql, "dateadd"
+            ),
+        }
 
 
 class TestDateAdd(BaseDateAdd):
@@ -179,10 +212,21 @@ class TestRight(BaseRight):
 class TestSafeCast(BaseSafeCast):
     pass
 
-
+@pytest.mark.skip("TODO: implement split_part, either using sqlite>=3.8.3 for WITH RECURSIVE support, or possibly sooner using jinja and agate tables")
 class TestSplitPart(BaseSplitPart):
     pass
 
-
 class TestStringLiteral(BaseStringLiteral):
+    pass
+
+class TestEquals(BaseEquals):
+    pass
+
+class TestMixedNullCompare(BaseMixedNullCompare):
+    pass
+
+class TestNullCompare(BaseNullCompare):
+    pass
+
+class TestValidateSqlMethod(BaseValidateSqlMethod):
     pass
