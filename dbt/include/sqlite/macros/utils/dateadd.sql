@@ -2,7 +2,7 @@
 
     date(
         {{ from_date_or_timestamp }},
-        "{{ datepart }} {{ datepart }}"
-        )
+        "{{ interval }} {{ datepart }}"
+    )
 
 {% endmacro %}
