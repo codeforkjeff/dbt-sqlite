@@ -184,10 +184,10 @@ vi setup.py # update dbt-core dependency if appropriate
 rm -rf dist/ build/ *.egg-info
 
 # make sure tools are up to date
-python -m pip install --upgrade setuptools wheel twine
+python -m pip install --upgrade build setuptools wheel twine
 
 # build
-python setup.py sdist bdist_wheel
+python -m build
 
 # upload to PyPI
 python -m twine upload dist/*
