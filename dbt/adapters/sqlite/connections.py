@@ -5,19 +5,20 @@ import glob
 import os.path
 import sqlite3
 from socket import gethostname
-from typing import Optional, Tuple, Any, Dict, List
+from typing import Optional, Tuple, Any, Dict, List, Union
 
-
-from dbt.adapters.base import Credentials
+from dbt.adapters.contracts.connection import Credentials
 from dbt.adapters.sql import SQLConnectionManager
-from dbt.contracts.connection import AdapterResponse
-from dbt.contracts.connection import Connection
-from dbt.exceptions import (
+from dbt.adapters.contracts.connection import AdapterResponse
+from dbt.adapters.contracts.connection import Connection
+from dbt.adapters.events.logging import AdapterLogger
+from dbt.adapters.exceptions.connection import FailedToConnectError
+from dbt_common.exceptions import (
     DbtDatabaseError,
-    FailedToConnectError,
     DbtRuntimeError
 )
-from dbt.logger import GLOBAL_LOGGER as logger
+
+logger = AdapterLogger("SQLite")
 
 
 @dataclass
@@ -175,3 +176,7 @@ class SQLiteConnectionManager(SQLConnectionManager):
 
         return super().add_query(sql=sql, auto_begin=auto_begin, bindings=bindings, abridge_sql_log=abridge_sql_log)
 
+    @classmethod
+    def data_type_code_to_name(cls, type_code: Union[int, str]) -> str:
+        # TODO: figure out how to implement this
+        return "UNKNOWN"

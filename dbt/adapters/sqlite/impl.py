@@ -11,8 +11,8 @@ from dbt.adapters.base.relation import BaseRelation, InformationSchema
 from dbt.adapters.sql import SQLAdapter
 from dbt.adapters.sqlite import SQLiteConnectionManager
 from dbt.adapters.sqlite.relation import SQLiteRelation
+from dbt_common.exceptions import NotImplementedError
 from dbt.contracts.graph.manifest import Manifest
-from dbt.exceptions import NotImplementedError
 
 
 class SQLiteAdapter(SQLAdapter):
