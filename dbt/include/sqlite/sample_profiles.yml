@@ -9,8 +9,11 @@ default:
       schemas_and_paths:
         main: '/my_project/data/etl.db'
       schema_directory: '/my_project/data'
-      extensions:
-        - '/path/to/sqlite-digest/digest.so'
+      # optional: list of file paths of SQLite extensions to load. see README for more details.
+      # extensions:
+      #   - '/path/to/sqlean/crypto.so'
+      #   - '/path/to/sqlean/math.so'
+      #   - '/path/to/sqlean/text.so'
 
     prod:
       type: sqlite
@@ -20,7 +23,10 @@ default:
       schemas_and_paths:
         main: '/my_project/data/etl.db'
       schema_directory: '/my_project/data'
-      extensions:
-        - '/path/to/sqlite-digest/digest.so'
+      # optional: list of file paths of SQLite extensions to load. see README for more details.
+      # extensions:
+      #   - '/path/to/sqlean/crypto.so'
+      #   - '/path/to/sqlean/math.so'
+      #   - '/path/to/sqlean/text.so'
 
   target: dev
