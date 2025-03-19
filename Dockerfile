@@ -7,8 +7,7 @@ RUN apt-get update && apt-get -y install git python3 python3-pip python3-venv sq
 
 WORKDIR /opt/dbt-sqlite
 
-RUN python3 -m pip install --upgrade pip \
-    && python3 -m pip install pytest pytest-dotenv dbt-tests-adapter~=1.10.4
+RUN python3 -m pip install --upgrade pip
 
 RUN wget -q https://github.com/nalgeon/sqlean/releases/download/0.15.2/crypto.so
 RUN wget -q https://github.com/nalgeon/sqlean/releases/download/0.15.2/math.so
@@ -20,6 +19,8 @@ COPY setup.py .
 COPY dbt ./dbt
 
 RUN pip install .
+
+RUN python3 -m pip install pytest pytest-dotenv dbt-tests-adapter~=1.10.4
 
 COPY run_tests.sh .
 COPY pytest.ini .
