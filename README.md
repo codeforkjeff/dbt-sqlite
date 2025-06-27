@@ -34,6 +34,7 @@ Use the right version. Starting with the release of dbt-core 1.0.0,
 versions of dbt-sqlite are aligned to the same major+minor
 [version](https://semver.org/) of dbt-core.
 
+- versions 1.10.x of this adapter work with dbt-core 1.10.x
 - versions 1.9.x of this adapter work with dbt-core 1.9.x
 - versions 1.6.x - 1.8.x are not supported: this adapter fell behind, and
   it's too much work to go back to support these versions
