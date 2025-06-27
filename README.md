@@ -176,9 +176,11 @@ or find a python distribution for Mac OS with this support.
 Because I forget...
 
 ```
-# assumes ~/.pypirc is already set up
+# create venv if it doesn't yet exist
+uv venv dbt-sqlite-build
 
-workon dbt-sqlite-devel
+# activate venv
+source dbt-sqlite-build/bin/activate
 
 vi dbt/adapters/sqlite/__version__.py # update version
 vi setup.py # update dbt-core dependency if appropriate
@@ -187,13 +189,13 @@ vi setup.py # update dbt-core dependency if appropriate
 rm -rf dist/ build/ *.egg-info
 
 # make sure tools are up to date
-python -m pip install --upgrade build setuptools wheel twine
+uv pip install --upgrade build setuptools wheel twine
 
 # build
-python -m build
+uv build
 
 # upload to PyPI
-python -m twine upload dist/*
+uv publish
 
 git commit
 git tag vXXX
