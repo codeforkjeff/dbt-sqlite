@@ -20,7 +20,7 @@ COPY dbt ./dbt
 
 RUN pip install .
 
-RUN python3 -m pip install pytest pytest-dotenv dbt-tests-adapter~=1.10.4
+RUN python3 -m pip install pytest pytest-dotenv dbt-tests-adapter~=1.16.0
 
 COPY run_tests.sh .
 COPY pytest.ini .
