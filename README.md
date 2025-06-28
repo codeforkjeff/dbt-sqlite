@@ -176,20 +176,13 @@ or find a python distribution for Mac OS with this support.
 Because I forget...
 
 ```
-# create venv if it doesn't yet exist
-uv venv dbt-sqlite-build
-
-# activate venv
-source dbt-sqlite-build/bin/activate
-
-vi dbt/adapters/sqlite/__version__.py # update version
-vi setup.py # update dbt-core dependency if appropriate
+# update version
+vi dbt/adapters/sqlite/__version__.py
+# update dbt-core dependency if appropriate
+vi setup.py
 
 # start clean
 rm -rf dist/ build/ *.egg-info
-
-# make sure tools are up to date
-uv pip install --upgrade build setuptools wheel twine
 
 # build
 uv build
